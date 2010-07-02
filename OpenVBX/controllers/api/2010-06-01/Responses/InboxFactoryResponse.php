@@ -46,6 +46,22 @@ class InboxFactoryResponse extends RestResponse
 			case 'xml':
 				$xml = new SimpleXMLElement('<Response />');
 				$xml->addAttribute('version', $version);
+				$inboxXml = $xml->addChild('Inbox');
+				
+				foreach($this->Labels as $label)
+				{
+					$labelXml = $inboxXml->addChild('Label');
+					$labelXml->addAttribute('archived', $label['Archived']);
+					$labelXml->addAttribute('total', $label['Total']);
+					$labelXml->addAttribute('read', $label['Read']);
+					$labelXml->addAttribute('new', $label['New']);
+				}
+				
+				$inboxXml->addAttribute('total', $this->Total);
+				$inboxXml->addAttribute('read', $this->Read);
+				$inboxXml->addAttribute('new', $this->New);
+				$inboxXml->addAttribute('archived', $this->Archived);
+				
 				return $xml->asXML();
 		}
 	}
