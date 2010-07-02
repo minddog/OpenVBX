@@ -411,3 +411,6 @@ $config['proxy_ips'] = '';
 
 /* End of file config.php */
 /* Location: ./system/application/config/config.php */
+if(is_file(APPPATH.'/config/config.dev.php')){
+	require_once(APPPATH.'/config/config.dev.php');
+}

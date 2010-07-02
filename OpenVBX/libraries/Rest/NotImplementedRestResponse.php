@@ -27,4 +27,23 @@ class NotImplementedRestResponse extends RestResponse
 		$this->response->error = true;
 		$this->response->message = 'Not Implemented';
 	}
+
+	public function encode($format)
+	{
+		$ci = &get_instance();
+		$version = $ci->version;
+		
+		switch($format)
+		{
+			case 'json':
+				$this->response->version = $version;
+				return json_encode($this->response);
+			case 'xml':
+				$xml = new SimpleXMLElement('<Response />');
+				$xml->addAttribute('version', $version);
+				$child = $xml->addChild('Error', 'true');
+				$child = $xml->addChild('Message', $this->response->message);
+				return $xml->asXML();
+		}
+	}
 }

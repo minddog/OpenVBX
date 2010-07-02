@@ -33,20 +33,36 @@ class Api_2010_06_01 extends Rest_Controller
 	{
 		parent::__construct();
 		RestResourceFactory::$resources = array(
-										'/Messages$/' => MessagesFactoryResource,
-										);
-	}
+												'/Inbox$/' => 'InboxFactoryResource', /* lables + counts */
+												'/Inbox/Messages' => 'InboxMessagesFactoryResource', /* list of all messages */
+												'/Inbox/Messages/{Sid}' => 'InboxMessagesInstanceResource', /* message Detail */
+												'/Inbox/Messages/{Sid}/Annotations' => 'InboxMessagesAnnotationsFactoryResource',
+												'/Inbox/Messages/{MessageSid}/Annotations/{Sid}' => 'InboxMessagesAnnotationsInstanceResource',
+												'/Inbox/Messages/{Sid}/Replies' =>  'InboxMessagesRepliesFactoryResource', /* list of calls or smses <Calls>,<SmsMessages>, etc. */
 
+												/* list of calls, POST to call back, optional callback # (call all my phones if not supplied in v2) */
+												/* list of smses, POST to send an SMS reply, only <Body> is required */
+												'/Inbox/Messages/{MessageSid}/Replies/{("Calls"|"SmsMessages")}' => 'InboxMessagesRepliesFactoryResource',
+
+												
+												'/Inbox/Labels' => 'InboxLabelsFactoryResource', /* list of labels (no counts) */
+												'/Inbox/Labels/{Name}' => 'InboxLabelsInstanceResource', /* detail about the label (not much for now) */
+												'/Inbox/Labels/{Name}/Messages' => 'InboxLabelsMessagesFactoryResource', /* list of messages */
+												);
+	}
+	
 	public function index()
 	{
-		$response = new ExceptionRestResponse('Resource not specified');
+		$factory = new stdClass();
+		$factory->resources = RestResourceFactory::$resources;
+		$response = new RestResponse( $factory );
 		$this->displayResponse($response);
 	}
 
-	public function resource($path)
+	public function resource($path = '')
 	{
 		$this->current_format = $this->detectFormat($path);
-
+		
 		/* Run Method */
 
 		try
@@ -74,8 +90,8 @@ class Api_2010_06_01 extends Rest_Controller
 		}
 		catch(Exception $e)
 		{
-			$data = $this->encodeError($e->getMessage(),
-									   $this->current_format);
+			$response = new ExceptionRestResponse( $e->getMessage() );
+			$data = $response->encode($this->current_format);
 		}
 
 		echo $data;
@@ -86,25 +102,7 @@ class Api_2010_06_01 extends Rest_Controller
 		return RestResourceFactory::buildResource($resource);
 	}
 
-	private function encodeError($message, $format)
+	private function encodeError($message)
 	{
-		switch($format)
-		{
-			case 'json':
-				$data = json_encode(array('error' => true,
-										  'message' => $message));
-				break;
-			case 'xml':
-				$xml = new SimpleXMLElement('<Response />');
-				$error = new SimpleXMLElement('<Error />');
-				$error->addChild($message);
-				$xml->addAttribute('version', $this->version);
-				$xml->addChild('Error', 'true');
-				$xml->addChild('Message', $message);
-				$data = $xml->asXML();
-				break;
-		}
-
-		return $data;
 	}
 }

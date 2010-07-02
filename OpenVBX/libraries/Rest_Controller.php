@@ -43,7 +43,6 @@ class Rest_Controller extends User_Controller {
 		{
 			if(preg_match('/Resource.php$/', $resource))
 			{
-				echo  $resource;
 				require_once($resource_path.$resource);
 			}
 		}

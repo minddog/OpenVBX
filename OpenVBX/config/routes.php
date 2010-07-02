@@ -86,6 +86,8 @@ $route['dialog'] = "dialog";
 $route['client'] = "client";
 $route['devices'] = "devices";
 $route['voicemail'] = "voicemail";
+$route['api/2010-06-01'] = "api/api_2010_06_01";
+$route['api/2010-06-01/(:any)'] = "api/api_2010_06_01/resource/$1";
 
 /* End of file routes.php */
 /* Location: ./system/application/config/routes.php */

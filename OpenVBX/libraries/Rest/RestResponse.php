@@ -24,8 +24,9 @@ class RestResponse
 {
 	protected $response;
 
-	public function __construct()
+	public function __construct($data = null)
 	{
+		$this->response = $data;
 	}
 	
 	public function encode($format)
@@ -36,14 +37,18 @@ class RestResponse
 		switch($format)
 		{
 			case 'json':
+				if(!is_object($this->response))
+					throw new Exception('Response data not an object');
+
 				$this->response->version = $version;
+				
 				return json_encode($this->response);
 			case 'xml':
 				$xml = new SimpleXMLElement('<Response />');
 				$xml->addAttribute('version', $version);
 				foreach(get_object_vars($this->response) as $prop => $val)
 				{
-					$child = $xml->addChild($prop);
+					$child = $xml->addChild($prop, $val);
 				}
 				return $xml->asXML();
 		}
