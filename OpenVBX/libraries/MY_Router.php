@@ -326,7 +326,7 @@ class MY_Router extends CI_Router
 			
 			// Does the RegEx match?
 			if (preg_match('#^'.$key.'$#', $uri))
-			{			
+			{
 				// Do we have a back-reference?
 				if (strpos($val, '$') !== FALSE AND strpos($key, '(') !== FALSE)
 				{

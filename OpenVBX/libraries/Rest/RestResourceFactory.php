@@ -30,12 +30,12 @@ class RestResourceFactory
 	{
 		foreach(self::$resources as $resource_expr => $class)
 		{
-			if(preg_match($resource_expr, $resource, $matches))
+			if(preg_match($resource_expr.'$/', $resource, $matches))
 			{
 				return new $class();
 			}
 
-			throw new RestResourceFactoryException("Unable to locate resource: $resource");
 		}
+		throw new RestResourceFactoryException("Unable to locate resource: $resource");
 	}
 }
