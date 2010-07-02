@@ -24,8 +24,8 @@ class ExceptionRestResponse extends RestResponse
 	public function __construct($errmsg)
 	{
 		parent::__construct(new stdClass());
-		$this->response->error = true;
-		$this->response->message = $errmsg;
+		$this->response->Error = true;
+		$this->response->Message = $errmsg;
 	}
 
 	public function encode($format)
@@ -39,14 +39,14 @@ class ExceptionRestResponse extends RestResponse
 				if(!is_object($this->response))
 					throw new Exception('Response data not an object');
 
-				$this->response->version = $version;
+				$this->response->Version = $version;
 				
 				return json_encode($this->response);
 			case 'xml':
 				$xml = new SimpleXMLElement('<Response />');
 				$xml->addAttribute('version', $version);
 				$child = $xml->addChild('Error', 'true');
-				$child = $xml->addChild('Message', $this->response->message);
+				$child = $xml->addChild('Message', $this->response->Message);
 				return $xml->asXML();
 		}
 	}			
