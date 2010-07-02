@@ -50,17 +50,21 @@ class InboxFactoryResponse extends RestResponse
 				
 				foreach($this->Labels as $label)
 				{
+					/* Label Properties */
 					$labelXml = $inboxXml->addChild('Label');
-					$labelXml->addAttribute('archived', $label['Archived']);
-					$labelXml->addAttribute('total', $label['Total']);
-					$labelXml->addAttribute('read', $label['Read']);
-					$labelXml->addAttribute('new', $label['New']);
+					$labelXml->addChild('Name', $label['Name']);
+					$labelXml->addChild('Archived', $label['Archived']);
+					$labelXml->addChild('Total', $label['Total']);
+					$labelXml->addChild('Read', $label['Read']);
+					$labelXml->addChild('New', $label['New']);
+					$labelXml->addChild('Sid', $label['Sid']);
 				}
-				
-				$inboxXml->addAttribute('total', $this->Total);
-				$inboxXml->addAttribute('read', $this->Read);
-				$inboxXml->addAttribute('new', $this->New);
-				$inboxXml->addAttribute('archived', $this->Archived);
+
+				/* Inbox Properties */
+				$inboxXml->addChild('Total', $this->Total);
+				$inboxXml->addChild('Read', $this->Read);
+				$inboxXml->addChild('New', $this->New);
+				$inboxXml->addChild('Archived', $this->Archived);
 				
 				return $xml->asXML();
 		}
