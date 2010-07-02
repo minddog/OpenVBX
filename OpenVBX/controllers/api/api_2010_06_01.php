@@ -59,7 +59,7 @@ class Api_2010_06_01 extends Rest_Controller
 			$response = new ExceptionRestResponse($e->getMessage());
 		}
 		
-		/* Return in format */
+		/* Return in specified format */
 		$this->displayResponse($response);
 	}
 

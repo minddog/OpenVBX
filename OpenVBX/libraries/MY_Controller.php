@@ -427,3 +427,4 @@ class MY_Controller extends Controller
 }
 
 require_once 'User_Controller.php';
+require_once 'Rest_Controller.php';
