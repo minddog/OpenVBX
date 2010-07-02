@@ -94,6 +94,16 @@ class Api_2010_06_01 extends Rest_Controller
 			$data = $response->encode($this->current_format);
 		}
 
+		if($this->current_format == 'json')
+		{
+			$pprint = $this->input->get_post('pprint', false);
+			if($pprint !== false)
+			{
+				echo json_pprint($data);
+				return;
+			}
+		}
+
 		echo $data;
 	}
 
