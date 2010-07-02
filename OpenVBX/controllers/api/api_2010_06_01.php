@@ -34,20 +34,20 @@ class Api_2010_06_01 extends Rest_Controller
 		parent::__construct();
 		RestResourceFactory::$resources = array(
 												'/Inbox$/' => 'InboxFactoryResource', /* lables + counts */
-												'/Inbox/Messages' => 'InboxMessagesFactoryResource', /* list of all messages */
-												'/Inbox/Messages/{Sid}' => 'InboxMessagesInstanceResource', /* message Detail */
-												'/Inbox/Messages/{Sid}/Annotations' => 'InboxMessagesAnnotationsFactoryResource',
-												'/Inbox/Messages/{MessageSid}/Annotations/{Sid}' => 'InboxMessagesAnnotationsInstanceResource',
-												'/Inbox/Messages/{Sid}/Replies' =>  'InboxMessagesRepliesFactoryResource', /* list of calls or smses <Calls>,<SmsMessages>, etc. */
+												'/Inbox\/Messages' => 'InboxMessagesFactoryResource', /* list of all messages */
+												'/Inbox\/Messages\/{Sid}' => 'InboxMessagesInstanceResource', /* message Detail */
+												'/Inbox\/Messages\/{Sid}\/Annotations' => 'InboxMessagesAnnotationsFactoryResource',
+												'/Inbox\/Messages\/{MessageSid}\/Annotations\/{Sid}' => 'InboxMessagesAnnotationsInstanceResource',
+												'/Inbox\/Messages\/{Sid}\/Replies' =>  'InboxMessagesRepliesFactoryResource', /* list of calls or smses <Calls>,<SmsMessages>, etc. */
 
 												/* list of calls, POST to call back, optional callback # (call all my phones if not supplied in v2) */
 												/* list of smses, POST to send an SMS reply, only <Body> is required */
-												'/Inbox/Messages/{MessageSid}/Replies/{("Calls"|"SmsMessages")}' => 'InboxMessagesRepliesFactoryResource',
+												'/Inbox\/Messages\/{MessageSid}\/Replies\/{("Calls"|"SmsMessages")}' => 'InboxMessagesRepliesFactoryResource',
 
 												
-												'/Inbox/Labels' => 'InboxLabelsFactoryResource', /* list of labels (no counts) */
-												'/Inbox/Labels/{Name}' => 'InboxLabelsInstanceResource', /* detail about the label (not much for now) */
-												'/Inbox/Labels/{Name}/Messages' => 'InboxLabelsMessagesFactoryResource', /* list of messages */
+												'/Inbox\/Labels' => 'InboxLabelsFactoryResource', /* list of labels (no counts) */
+												'/Inbox\/Labels\/{Name}' => 'InboxLabelsInstanceResource', /* detail about the label (not much for now) */
+												'/Inbox\/Labels\/{Name}\/Messages' => 'InboxLabelsMessagesFactoryResource', /* list of messages */
 												);
 	}
 	

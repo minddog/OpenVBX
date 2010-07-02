@@ -23,7 +23,12 @@ class InboxFactoryResource extends RestResource
 {
 	public function get()
 	{
-		return new NotImplementedRestResponse();
+		$user = OpenVBX::getCurrentUser();
+		$groups = VBX_User::get_group_ids($user->id);
+		$response = new RestResponse();
+		$response->counts = VBX_Message::get_folders($user->id, $groups);
+		
+		return new RestResponse($response);
 	}
 
 	public function post()
