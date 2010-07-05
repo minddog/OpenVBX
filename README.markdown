@@ -16,13 +16,6 @@ Please see [INSTALL.markdown](https://github.com/twilio/OpenVBX/blob/master/INST
 Report issues to:
 https://github.com/twilio/openvbx/issues
 
-Title: A brief description of the story
-Body: 
-1. A full summary of the problem.
-2. Steps to reproduce
-3. Possible solution (optional)
-
-
 # More Information
 -----------------------------
 Visit http://openvbx.org

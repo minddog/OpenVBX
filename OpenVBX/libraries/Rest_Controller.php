@@ -35,13 +35,13 @@ class Rest_Controller extends User_Controller {
 		
 		foreach(scandir($response_path) as $response)
 		{
-			if(preg_match('/Response.php$/', $response))
+			if(preg_match('/^[A-Z].*Response.php$/', $response))
 				require_once($response_path.$response);
 		}
 
 		foreach(scandir($resource_path) as $resource)
 		{
-			if(preg_match('/Resource.php$/', $resource))
+			if(preg_match('/^[A-Z].*Resource.php$/', $resource))
 			{
 				require_once($resource_path.$resource);
 			}

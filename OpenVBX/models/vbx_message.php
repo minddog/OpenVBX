@@ -289,10 +289,77 @@ class VBX_Message extends Model {
 		$user = isset($options['user'])? $options['user'] : array();
 		$status = isset($options['status'])? $options['status'] : array();
 		$call_guid = isset($options['call_guid'])? $options['call_guid'] : array();
-
+		$ticket_status = isset($options['ticket_status'])? $options['ticket_status'] : array('all');
+		$archived = isset($options['archived'])? $options['archived'] : false;
+		$from = isset($options['from'])? $options['from'] : array();
+		$to = isset($options['to'])? $options['to'] : array();
+		$body = isset($options['body'])? $options['body'] : false;
+		
 		if(!empty($status))
 		{
 			$ci->db->where_not_in('messages.status', $status);
+		}
+
+		if(!in_array('all', $ticket_status))
+		{
+			$ci->db->where_in('messages.ticket_status', $ticket_status);
+		}
+
+		if(!empty($from))
+		{
+			$ci->db->where_in('messages.caller', $from);
+		}
+		
+		if(!empty($to))
+		{
+			$ci->db->where_in('messages.called', $to);
+		}
+
+		if($body !== false)
+		{
+			/* Allow search operators on body
+			 * ^ - Start of line
+			 * $ - End of line
+			 * * - Any character sequences
+			 * ^Hello - This will find any lines that start with the phrase 'Hello'
+			 * Bye$ - This will find any lines that end with the phrase 'Bye'
+			 */
+			
+			$search_operators = array();
+			$body = str_replace('%','\%', $body);
+			if(strpos($body, '*') >= 0)
+			{
+				$search_operators[] = '*';
+				$body = str_replace('*', '%', $body);
+			}
+			
+			if(strpos($body, '^') !== false)
+			{
+				$search_operators[] = '^';
+				$body = substr($body, 1, strlen($body));
+			}
+			else
+			{
+				$body = '%'.$body;
+			}
+
+			if(strpos($body, '$') == strlen($body) - 1)
+			{
+				$search_operators[] = '$';
+				$body = substr($body, 0, strlen($body) -1);
+			}
+			else
+			{
+				$body .= '%';
+			}
+
+			if(empty($search_operators))
+			{
+				$body = '%'.$body.'%';
+			}
+			
+			if(!empty($body))
+				$ci->db->where('messages.content_text LIKE', $body);
 		}
 		
 		$group_sql = '';
@@ -342,7 +409,7 @@ class VBX_Message extends Model {
 
 		$ci->db
              ->where('messages.tenant_id', $ci->tenant->id)
-             ->where('archived', false);
+             ->where('archived', $archived);
 
 		// Only show messages that have been transcribed OR if they're older than 5 minutes because
 		// at that point, we can assume the transcription isn't coming.
@@ -357,7 +424,7 @@ class VBX_Message extends Model {
 		
 		return $ci->db;
 	}
-	
+
 	function get_messages($options, $offset, $size)
 	{
 		$query = $this->get_messages_query($options);
@@ -370,7 +437,6 @@ class VBX_Message extends Model {
 			 ->limit($size, $offset)
 			 ->get()
 			 ->result();
-		
 		return $result;
 	}
 

@@ -50,7 +50,7 @@ $autoload['libraries'] = array('template');
 |	$autoload['helper'] = array('url', 'file');
 */
 
-$autoload['helper'] = array('applet', 'url', 'format', 'form', 'mail', 'json', 'model', 'banner');
+$autoload['helper'] = array('applet', 'url', 'format', 'form', 'mail', 'json', 'model', 'banner', 'input');
 
 
 /*
