@@ -66,7 +66,10 @@ class Api_2010_06_01 extends Rest_Controller
 		
 		try
 		{
-			$resource = $this->findResource(str_replace('.'.$this->current_format, '', $path));
+			/* Strip QS and extension to clean path */
+			$resource_path = str_replace('.'.$this->current_format, '', $path);
+			$resource_path = preg_replace('#\?.*#', '', $resource_path);
+			$resource = $this->findResource($resource_path);
 			/* Run HTTP Request Method GET/POST/PUT/DELETE */
 			$response = $resource->run($this->request_method);
 		}
