@@ -61,15 +61,18 @@ class Api_2010_06_01 extends Rest_Controller
 
 	public function resource()
 	{
-		$path = str_replace('/api/'.$this->version.'/', '', $this->uri->uri_string());
-		$this->current_format = $this->detectFormat($path);
 		
 		try
 		{
-			/* Strip QS and extension to clean path */
-			$resource_path = str_replace('.'.$this->current_format, '', $path);
+			/* Strip QS and detect extension */
+			$resource_path = str_replace('/api/'.$this->version.'/', '', $this->uri->uri_string());
 			$resource_path = preg_replace('#\?.*#', '', $resource_path);
+			$this->current_format = $this->detectFormat($resource_path);
+
+			/* Remove extension and locate resource */
+			$resource_path = str_replace('.'.$this->current_format, '', $resource_path);
 			$resource = $this->findResource($resource_path);
+			
 			/* Run HTTP Request Method GET/POST/PUT/DELETE */
 			$response = $resource->run($this->request_method);
 		}
@@ -97,12 +100,25 @@ class Api_2010_06_01 extends Rest_Controller
 			$data = $response->encode($this->current_format);
 		}
 
-		if($this->current_format == 'json')
+		$pprint = $this->input->get_post('pprint', false);
+		if($pprint != false)
 		{
-			$pprint = $this->input->get_post('pprint', false);
-			if($pprint !== false)
+			
+			if($this->current_format == 'json')
 			{
 				echo json_pprint($data);
+				return;
+			}
+			
+			if($this->current_format == 'xml')
+			{
+				$doc = new DOMDocument('1.0');
+				$doc->formatOutput = true;
+
+				$domnode = dom_import_simplexml(simplexml_load_string($data));
+				$domnode = $doc->importNode($domnode, true);
+				$doc->appendChild($domnode);
+				echo $doc->saveXML();
 				return;
 			}
 		}
