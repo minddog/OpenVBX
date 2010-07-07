@@ -58,6 +58,7 @@ class InboxFactoryResponse extends RestResponse
 					$labelXml->addChild('Read', $label['Read']);
 					$labelXml->addChild('New', $label['New']);
 					$labelXml->addChild('Sid', $label['Sid']);
+					$labelXml->addChild('Type', $label['Type']);
 				}
 
 				/* Inbox Properties */
