@@ -131,6 +131,7 @@ GET /api/2010-06-01/Inbox.xml HTTP/1.1
     			<Read>1</Read>
     			<New>2</New>
     			<Sid>0</Sid>
+				<Type>inbox</Type>
     		</Label>
     		<Label>
     			<Name>Sales</Name>
@@ -139,6 +140,7 @@ GET /api/2010-06-01/Inbox.xml HTTP/1.1
     			<Read>0</Read>
     			<New>0</New>
     			<Sid>1</Sid>
+				<Type>group</Type>
     		</Label>
     		<Label>
     			<Name>Support</Name>
@@ -147,6 +149,7 @@ GET /api/2010-06-01/Inbox.xml HTTP/1.1
     			<Read>0</Read>
     			<New>0</New>
     			<Sid>2</Sid>
+				<Type>group</Type>
     		</Label>
     		<Total>3</Total>
     		<Read>1</Read>
