@@ -21,14 +21,66 @@
 
 class InboxMessagesAnnotationsFactoryResource extends RestResource
 {
+	private $MessageSid;
+		
+	public function __construct($params)
+	{
+		parent::__construct();
+		$this->MessageSid = !empty($params['MessageSid'])? $params['MessageSid'] : null;
+		if(!$this->MessageSid)
+			throw new RestException('Missing Message Sid');
+	}
+	
+
 	public function get()
 	{
-		return new NotImplementedRestResponse();
+		$ci = &get_instance();
+		$max = input_int($ci->input->get('max'), 10);
+		$offset = intval($ci->input->get('offset', 0));
+		$ci->load->model('vbx_message');
+		$message = $ci->vbx_message->get_message($this->MessageSid);
+
+		if($message)
+		{
+			/* FIXME: no pagination support, we're using array_slice till we implement better domain objects */
+			$annotations = $ci->vbx_message->get_message_annotations($this->MessageSid);
+			$total = count($annotations);
+			$annotations = array_slice($annotations, $offset, $max);
+		}
+
+		/* Build Response */
+		$response = new MessageAnnotationsFactoryResponse();
+		$response->MessageSid = $this->MessageSid;
+		$response->Annotations = $annotations;
+		$response->Offset = $offset;
+		$response->Max = $max;
+		$response->Total = $total;
+		return $response;
 	}
 
 	public function post()
 	{
-		return new NotImplementedRestResponse();
+		$ci = &get_instance();
+		$type = $ci->input->post('type', 'notes');
+
+		$body = $ci->input->post('body', '');
+		
+		$message = $ci->vbx_message->get_message($this->MessageSid);
+		$user = OpenVBX::getCurrentUser();
+		$sid = $ci->vbx_message->annotate($this->MessageSid,
+										  $user->id,
+										  $body,
+										  $type);
+
+		if(!$sid)
+			throw new RestException('Unable to create annotation');
+		
+		$response = new RestResponse();
+		
+		$response->MessageSid = $this->MessageSid;
+		$response->Sid = (string)$sid;
+		
+		return $response;
 	}
 
 	public function put()

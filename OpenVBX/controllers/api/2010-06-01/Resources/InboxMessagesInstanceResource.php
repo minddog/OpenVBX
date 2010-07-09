@@ -21,9 +21,27 @@
 
 class InboxMessagesInstanceResource extends RestResource
 {
+	private $Sid;
+	
+	public function __construct($params)
+	{
+		parent::__construct();
+		$this->Sid = !empty($params['Sid'])? $params['Sid'] : null;
+		
+		if(!$this->Sid)
+			throw new RestException('Missing Message Sid');
+	}
+	
 	public function get()
 	{
-		return new NotImplementedRestResponse();
+		$ci = &get_instance();
+		$ci->load->model('vbx_message');
+		$message = $ci->vbx_message->get_message($this->Sid);
+		
+		$response = new MessageInstanceResponse();
+		$response->Sid = $this->Sid;
+		$response->Message = $message;
+		return $response;
 	}
 
 	public function post()
