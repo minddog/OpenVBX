@@ -4,7 +4,7 @@ require 'rexml/document'
 require 'matchers'
 require 'uri'
 
-describe "inbox" do
+describe "labels" do
 
   before(:each) do
     @api_version = API_VERSION 
@@ -17,13 +17,13 @@ describe "inbox" do
     # Create a Twilio REST account object using your Twilio account ID and token
     @account = Twilio::RestAccount.new(@api_user_email, @api_user_password)
     
-    @resourceUrl = "api/#{@api_version}/Inbox.xml"
+    @resourceUrl = "api/#{@api_version}/Labels.xml"
   end
 
-  it "should return a list of inboxes and available labels" do
-    resp = make_request({}, 'GET', 'api/2010-06-01/Inbox.xml')
-    resp.should have_nodes("/Response/Inbox", 1)
-    resp.should have_at_least_num_nodes("/Response/Inbox/Label", 1)
+  it "should return a list of label resources" do
+    resp = make_request({}, 'GET')
+    resp.should have_nodes("/Response/Labels", 1)
+    resp.should have_at_least_num_nodes("/Response/Labels/Label", 1)
   end
 
   def make_request(params, method= 'GET', url = nil)

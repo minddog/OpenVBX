@@ -19,7 +19,7 @@
  * Contributor(s):
  **/
 
-class InboxMessagesInstanceResource extends RestResource
+class MessagesInstanceResource extends RestResource
 {
 	private $Sid;
 	

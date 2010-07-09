@@ -4,7 +4,7 @@ require 'rexml/document'
 require 'matchers'
 require 'uri'
 
-describe "inbox/messages/{SID}/replies" do
+describe "messages/{SID}/replies" do
 
   before(:each) do
     @api_version = API_VERSION 
@@ -17,7 +17,7 @@ describe "inbox/messages/{SID}/replies" do
     # Create a Twilio REST account object using your Twilio account ID and token
     @account = Twilio::RestAccount.new(@api_user_email, @api_user_password)
     
-    @resourceUrl = "api/#{@api_version}/Inbox/Messages/1/Replies.xml"
+    @resourceUrl = "api/#{@api_version}/Messages/1/Replies.xml"
   end
 
   it "should return a list of replies for a message instance" do
@@ -38,4 +38,3 @@ describe "inbox/messages/{SID}/replies" do
     return REXML::Document.new(resp.body)
   end
 end
-

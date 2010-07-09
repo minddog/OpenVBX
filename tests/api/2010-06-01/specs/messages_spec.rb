@@ -17,7 +17,7 @@ describe "inbox/messages" do
     # Create a Twilio REST account object using your Twilio account ID and token
     @account = Twilio::RestAccount.new(@api_user_email, @api_user_password)
     
-    @resourceUrl = "api/#{@api_version}/Inbox/Messages.xml"
+    @resourceUrl = "api/#{@api_version}/Messages.xml"
   end
 
   it "should return a list of messages" do
