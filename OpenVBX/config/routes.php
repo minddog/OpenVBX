@@ -86,8 +86,8 @@ $route['dialog'] = "dialog";
 $route['client'] = "client";
 $route['devices'] = "devices";
 $route['voicemail'] = "voicemail";
-$route['api/2010-06-01'] = "api/api_2010_06_01";
 $route['api/2010-06-01/(.*)'] = "api/api_2010_06_01/resource";
+$route['api/2010-06-01(.*)?'] = "api/api_2010_06_01";
 $route['docs/(.*)'] = "docs/page/$1";
 $route['docs'] = "docs/index";
 

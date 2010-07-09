@@ -21,7 +21,7 @@
 
 class MessagesFactoryResponse extends RestResponse
 {
-	public function __construct($properties)
+	public function __construct($properties = array())
 	{
 		parent::__construct();
 		foreach($properties as $prop => $val)
@@ -38,32 +38,68 @@ class MessagesFactoryResponse extends RestResponse
 		switch($format)
 		{
 			case 'json':
-				$this->response->version = $version;
-				return json_encode($this->response);
+				if(!is_object($this->response))
+					throw new Exception('Response data not an object');
+
+				$this->response->Version = $version;
+				
+				$messagesJSON = new stdClass();
+				$messagesJSON->Messages = array();
+				$messagesJSON->Total = $this->Total;
+				$messagesJSON->Offset = $this->Offset;
+				$messagesJSON->Max = $this->Max;
+
+				foreach($this->Messages as $message)
+				{
+					$messagesJSON->Messages[] =
+						array(
+							  'Sid' => $message->id,
+							  'From' => format_phone($message->caller),
+							  'To' => format_phone($message->called),
+							  'Body' => $message->content_text,
+							  'RecordingUrl' => preg_replace('/http:\/\//', 'https://', $message->content_url),
+							  'RecordingLength' => $message->content_url? format_player_time($message->size) : null,
+							  'Type' => $message->type,
+							  'TicketStatus' => $message->ticket_status,
+							  'Status' => $message->status,
+							  'Assigned' => $message->assigned_to,
+							  'Archived' => ($message->status == 'archived')? true : false,
+							  'Unread' => ($message->status == 'new')? true : false,
+							  'TimeReceived' => date('c', strtotime($message->created)),
+							  'LastUpdated' => date('c', strtotime($message->updated)),
+							  );
+				}
+				return json_encode($messagesJSON);
+				
 			case 'xml':
 				$xml = new SimpleXMLElement('<Response />');
 				$xml->addAttribute('version', $version);
 				$messagesXml = $xml->addChild('Messages');
-				foreach($this->response->messages as $message)
+				foreach($this->Messages as $message)
 				{
+					/* Message Instance Properties */
 					$messageXml = $messagesXml->addChild('Message');
-					$messageXml->addAttribute('id', $message->id);
-					$messageXml->addAttribute('updated', $message->updated);
-					$messageXml->addAttribute('from', $message->caller);
-					$messageXml->addAttribute('to', $message->called);
-					$messageXml->addAttribute('type', $message->type);
-					$messageXml->addAttribute('status', $message->status);
-					$messageXml->addAttribute('recordingUrl', $message->content_url);
-					$messageXml->addAttribute('transcription', $message->content_text);
-					$messageXml->addAttribute('ticketStatus', $message->ticket_status);
-					$messageXml->addAttribute('archived', ($message->archived == 1)? 'true' : 'false');
+					$messageXml->addChild('Sid', $message->id);
+					$messageXml->addChild('From', format_phone($message->caller));
+					$messageXml->addChild('To', format_phone($message->called));
+					$messageXml->addChild('Body', $message->content_text);
+					$messageXml->addChild('TimeReceived', $message->created);
+					$messageXml->addChild('LastUpdated', $message->updated);
+					$messageXml->addChild('RecordingUrl', $message->content_url);
+					$messageXml->addChild('RecordingLength', $message->content_url? format_player_time($message->size) : null);
+					$messageXml->addChild('Type', $message->type);
+					$messageXml->addChild('TicketStatus', $message->ticket_status);
+					$messageXml->addChild('Status', $message->status);
+					$messageXml->addChild('Archived', ($message->status == 'archived')? 'true' : 'false');
+					$messageXml->addChild('Unread', ($message->status == 'new')? 'true' : 'false');
 				}
-				return $xml->asXML();
+
+				/* Message Factory Properties */
+				$messagesXml->addAttribute('total', $this->Total);
+				$messagesXml->addAttribute('offset', $this->Offset);
+				$messagesXml->addAttribute('max', $this->Max);
 				
+				return $xml->asXML();
 		}
-		
-		throw new RestResourceException("Format not supported: $format");
 	}
-
 }
-

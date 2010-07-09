@@ -127,7 +127,7 @@ class User_Controller extends MY_Controller
 			}
 		}
 
-		if($this->response_type == 'json')
+		if($this->response_type == 'json' || $this->uri->segment(1) == 'api')
 		{
 			$this->attempt_digest_auth();
 		}
@@ -254,7 +254,7 @@ class User_Controller extends MY_Controller
 				$this->session->set_userdata($userdata);
 			}
 		}
-
+		
 		if(!$this->session->userdata('loggedin'))
 		{
 			header("WWW-Authenticate: Basic realm=\"OpenVBX\"");

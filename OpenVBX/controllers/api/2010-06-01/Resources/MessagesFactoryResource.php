@@ -23,9 +23,45 @@ class MessagesFactoryResource extends RestResource
 {
 	public function get()
 	{
-		$ci  = &get_instance();
-		$ci->load->model('vbx_message');
-		$messages = $ci->vbx_message->get_messages(array(), 0, 100);
-		return new MessagesFactoryResponse($messages);
+		/* Available query string options: ?max=&offset= */
+		$ci = &get_instance();
+		$max = input_int($ci->input->get('max'), 10);
+		$offset = intval($ci->input->get('offset', 0));
+		$archived = input_bool($ci->input->get('archived', false));
+		$from = input_array($ci->input->get('from', false));
+		$to = input_array($ci->input->get('to', false));
+		$body = $ci->input->get('body', false);
+		$ticket_status = input_array($ci->input->get('ticket_status'), array('all'));
+		$response = new MessagesFactoryResponse();
+		
+		$message = new VBX_Message();
+		$messages = $message->get_messages(array('ticket_status' => $ticket_status,
+												 'archived' => $archived,
+												 'from' => $from,
+												 'to' => $to,
+												 'body' => $body,
+												 ), $offset, $max);
+		$response->Messages = $messages['messages'];
+		$response->Total = $messages['total'];
+		$response->Max = $messages['max'];
+		$response->Offset = $messages['offset'];
+		
+		return $response;
 	}
+
+	public function post()
+	{
+		return new NotImplementedRestResponse();
+	}
+
+	public function put()
+	{
+		return new NotImplementedRestResponse();
+	}
+
+	public function delete()
+	{
+		return new NotImplementedRestResponse();
+	}
+
 }

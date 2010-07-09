@@ -19,11 +19,29 @@
  * Contributor(s):
  **/
 
-class InboxLabelsInstanceResource extends RestResource
+class LabelsFactoryResource extends RestResource
 {
 	public function get()
 	{
-		return new NotImplementedRestResponse();
+		$user = OpenVBX::getCurrentUser();
+		$groups = VBX_User::get_group_ids($user->id);
+		$response = new LabelsFactoryResponse();
+		$folders = VBX_Message::get_folders($user->id, $groups);
+		foreach($folders as $folder)
+		{
+			$Labels[] = array(
+							  'Name' => $folder->name,
+							  'Sid' => $folder->id,
+							  'Archived' => $folder->archived,
+							  'Type' => $folder->type,
+							  'New' => $folder->new,
+							  'Read' => $folder->read,
+							  'Total' => $folder->total,
+							  );
+		}
+
+		$response->Labels = $Labels;
+		return $response;
 	}
 
 	public function post()

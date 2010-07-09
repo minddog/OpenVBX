@@ -33,29 +33,34 @@ class Api_2010_06_01 extends Rest_Controller
 	{
 		parent::__construct();
 		RestResourceFactory::$resources = array(
-												'/Inbox\/Messages\/{MessageSid}\/Annotations\/{Sid}' => 'InboxMessagesAnnotationsInstanceResource',
-												'/Inbox\/Messages\/{Sid}\/Replies' =>  'InboxMessagesRepliesFactoryResource', /* list of calls or smses <Calls>,<SmsMessages>, etc. */
-												'/Inbox\/Messages\/{Sid}\/Annotations' => 'InboxMessagesAnnotationsFactoryResource',
-												'/Inbox\/Messages\/{Sid}' => 'InboxMessagesInstanceResource', /* message Detail */
-												'/Inbox\/Messages' => 'InboxMessagesFactoryResource', /* list of all messages */
-
+												'Messages/{MessageSid}/Annotations/{Sid}' => 'MessagesAnnotationsInstanceResource',
+												'Messages/{MessageSid}/Replies' =>  'MessagesRepliesFactoryResource', /* list of calls or smses <Calls>,<SmsMessages>, etc. */
 												/* list of calls, POST to call back, optional callback # (call all my phones if not supplied in v2) */
 												/* list of smses, POST to send an SMS reply, only <Body> is required */
-												'/Inbox\/Messages\/{MessageSid}\/Replies\/{("Calls"|"SmsMessages")}' => 'InboxMessagesRepliesFactoryResource',
+												'Messages/{MessageSid}/Replies/{AnnotationType}' => 'MessagesRepliesFactoryResource',
+												
+												'Messages/{MessageSid}/Annotations' => 'MessagesAnnotationsFactoryResource',
+												'Messages/{Sid}' => 'MessagesInstanceResource', /* message Detail */
+												'Messages' => 'MessagesFactoryResource', /* list of all messages */
 
 												
-												'/Inbox\/Labels\/{Name}\/Messages' => 'InboxLabelsMessagesFactoryResource', /* list of messages */
-												'/Inbox\/Labels\/{Name}' => 'InboxLabelsInstanceResource', /* detail about the label (not much for now) */
-												'/Inbox\/Labels' => 'InboxLabelsFactoryResource', /* list of labels (no counts) */
-												'/Inbox' => 'InboxFactoryResource', /* lables + counts */
+												'Labels/{Name}/Messages' => 'MessagesFactoryResource', /* list of messages in label resource */
+												'Labels/{Name}' => 'LabelsInstanceResource', /* detail about the label resource instance */
+												'Labels' => 'LabelsFactoryResource', /* list of all label resource instances */
 												);
 	}
 	
 	public function index()
 	{
-		$factory = new stdClass();
-		$factory->resources = RestResourceFactory::$resources;
-		$response = new RestResponse( $factory );
+		/* Strip QS and detect extension */
+		$resource_path = str_replace('/api/'.$this->version.'/', '', $this->uri->uri_string());
+		$resource_path = preg_replace('#\?.*#', '', $resource_path);
+		$this->current_format = $this->detectFormat($resource_path);
+
+		$response = new RestResponse( );
+
+		$response->ServerVersion = OpenVBX::version();
+		
 		$this->displayResponse($response);
 	}
 

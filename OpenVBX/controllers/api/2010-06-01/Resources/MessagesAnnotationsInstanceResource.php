@@ -19,7 +19,7 @@
  * Contributor(s):
  **/
 
-class InboxLabelsMessagesFactoryResource extends RestResource
+class MessagesAnnotationsInstanceResource extends RestResource
 {
 	public function get()
 	{

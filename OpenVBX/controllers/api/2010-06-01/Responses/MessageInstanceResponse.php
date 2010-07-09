@@ -83,4 +83,3 @@ class MessageInstanceResponse extends RestResponse
 	}
 
 }
-

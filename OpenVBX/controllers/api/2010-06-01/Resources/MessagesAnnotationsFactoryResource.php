@@ -19,7 +19,7 @@
  * Contributor(s):
  **/
 
-class InboxMessagesAnnotationsFactoryResource extends RestResource
+class MessagesAnnotationsFactoryResource extends RestResource
 {
 	private $MessageSid;
 		

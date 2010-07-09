@@ -22,6 +22,11 @@
 class RestResourceException extends Exception {}
 class RestResource
 {
+	public function __construct()
+	{
+		/* Do Nothing */
+	}	
+	
 	public function run($method)
 	{
 		if(method_exists($this, strtolower($method)))

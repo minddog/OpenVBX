@@ -19,7 +19,7 @@
  * Contributor(s):
  **/
 
-class InboxFactoryResponse extends RestResponse
+class LabelsFactoryResponse extends RestResponse
 {
 	public function __construct($properties = array())
 	{
@@ -46,7 +46,7 @@ class InboxFactoryResponse extends RestResponse
 			case 'xml':
 				$xml = new SimpleXMLElement('<Response />');
 				$xml->addAttribute('version', $version);
-				$inboxXml = $xml->addChild('Inbox');
+				$inboxXml = $xml->addChild('Labels');
 				
 				foreach($this->Labels as $label)
 				{
@@ -60,12 +60,6 @@ class InboxFactoryResponse extends RestResponse
 					$labelXml->addChild('Sid', $label['Sid']);
 					$labelXml->addChild('Type', $label['Type']);
 				}
-
-				/* Inbox Properties */
-				$inboxXml->addChild('Total', $this->Total);
-				$inboxXml->addChild('Read', $this->Read);
-				$inboxXml->addChild('New', $this->New);
-				$inboxXml->addChild('Archived', $this->Archived);
 				
 				return $xml->asXML();
 		}

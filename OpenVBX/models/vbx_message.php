@@ -700,10 +700,21 @@ class VBX_Message extends Model {
 		return $user_annotations;
 	}
 
-	function get_message_annotations($message_id, $annotation_type = null)
+	function get_message_annotations($message_id, $options = array())
 	{
         $ci =& get_instance();
+		$keys = !empty($options['annotation_types'])? $options['annotation_types'] : array();
+		$annotation_types = array();
+		foreach($keys as $annotation_type_key)
+		{
+			if(!($annotation_type = $this->get_annotation_type($annotation_type_key)))
+			{
+				throw new VBX_MessageException('Annotation type does not exist: '.$annotation_type_key);
+			}
 
+			$annotation_types[] = $annotation_type;
+		}
+		
 		$message_annotations = $ci->db
 			->select('a.*, u.email, u.id as user_id, u.first_name, u.last_name, at.description as annotation_type')
 			->from('annotations a')
@@ -711,19 +722,24 @@ class VBX_Message extends Model {
 			->join('users u', 'u.id = a.user_id')
 			->order_by('a.created DESC')
 			->where('a.message_id', $message_id)
-            ->where('a.tenant_id', $ci->tenant->id)
-			->get()->result();
+			->where('a.tenant_id', $ci->tenant->id);
 
+		if(!empty($annotation_types))
+			$message_annotations = $message_annotations
+				 ->where_in('a.annotation_type', $annotation_types);
+		
+		$message_annotations = $message_annotations
+			 ->get()->result();
+		
 		return $message_annotations;
 	}
 
-	function annotate($message_id, $user_id, $description, $annotation_type)
+	function annotate($message_id, $user_id, $description, $annotation_type_key)
 	{
         $ci =& get_instance();
-
-		if(!($annotation_type = $this->get_annotation_type($annotation_type)))
+		if(!($annotation_type = $this->get_annotation_type($annotation_type_key)))
 		{
-			return false;
+			throw new VBX_MessageException('Annotation type does not exist: '.$annotation_type_key);
 		}
 
 		$ci->db
@@ -751,7 +767,7 @@ class VBX_Message extends Model {
 		{
 			$annotation = $annotation[0]->id;
 		}
-
+		
 		return $annotation;
 	}
 		

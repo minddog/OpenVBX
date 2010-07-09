@@ -28,11 +28,24 @@ class RestResourceFactory
 	
 	public static function buildResource($resource)
 	{
-		foreach(self::$resources as $resource_expr => $class)
+		$params = array();
+		foreach(self::$resources as $resource_uri => $class)
 		{
-			if(preg_match($resource_expr.'$/', $resource, $matches))
+			$resource_expr = preg_replace('/({([^\/]+)})/' , '(?P<\2>[^\/]+)', $resource_uri);
+			if(preg_match('#'.$resource_expr.'$#', $resource, $matches))
 			{
-				return new $class();
+				preg_match_all('/{([^\/]+)}/' , $resource_uri, $items);
+				if(count($items) > 1)
+				{
+					$items = array_slice($items, 1);
+					$items = !empty($items)? $items[0] : array();
+					foreach($items as $key)
+					{
+						$params[$key] = $matches[$key];
+					}
+				}
+				
+				return new $class($params);
 			}
 
 		}

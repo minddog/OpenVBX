@@ -53,7 +53,7 @@ class Rest_Controller extends User_Controller {
 	{
 		$current_format = $this->default_format;
 		
-		if(preg_match('/('.implode('|', $this->supported_extensions).')$/', $path, $matches))
+		if(preg_match('#('.implode('|', $this->supported_extensions).')$#', $path, $matches))
 		{
 			$current_format =	$matches[1];
 		}

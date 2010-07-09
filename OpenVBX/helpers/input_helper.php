@@ -22,10 +22,11 @@ function input_array($input, $default = array())
 
 function input_int($input, $default)
 {
+	if(empty($input) && $input !== 0)
+		return $default;
+	
 	$input = trim($input);
 	
-	if(empty($input) && $input != 0)
-		return $default;
 
 	return $input;
 }
