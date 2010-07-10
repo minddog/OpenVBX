@@ -90,6 +90,28 @@ class Api_2010_06_01 extends Rest_Controller
 		$this->displayResponse($response);
 	}
 
+	private function responseHeaders()
+	{
+		$version = OpenVBX::version();
+		
+		/* Determine headers based on requested format */
+		switch($this->current_format)
+		{
+			case 'xml':
+				$contentType = 'application/xhtml+xml';
+				break;
+			default:
+			case 'json':
+				$contentType = 'application/json';
+		}
+		
+
+		/* Emit headers */
+		header("X-OpenVBX-API-Version: {$this->version}");
+		header("X-OpenVBX-Version: $version");
+		header("Content-type: {$contentType}");
+	}
+
 	private function displayResponse($response)
 	{
 		if(empty($this->current_format))
@@ -98,14 +120,17 @@ class Api_2010_06_01 extends Rest_Controller
 		try
 		{
 			$data = $response->encode($this->current_format);
+			$this->responseHeaders();
 		}
 		catch(Exception $e)
 		{
+			$this->responseHeaders();
 			$response = new ExceptionRestResponse( $e->getMessage() );
 			$data = $response->encode($this->current_format);
 		}
 
 		$pprint = $this->input->get_post('pprint', false);
+
 		if($pprint != false)
 		{
 			
