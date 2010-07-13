@@ -47,12 +47,13 @@ class MessageAnnotationsFactoryResponse extends RestResponse
 					$annotationsJSON->Annotations[] =
 						array(
 							  'Sid' => $annotation->id,
+							  'ActionSid' => $annotation->action_id,
 							  'Type' => $annotation->annotation_type,
 							  'UserSid' => $annotation->user_id,
 							  'FirstName' => $annotation->first_name,
 							  'LastName' => $annotation->last_name,
 							  'Description' => $annotation->description,
-							  'Created' => $annotation->created,
+							  'Created' => utc_time_rfc2822($annotation->created),
 							  );
 				}
 				$annotationsJSON->MessageSid = $this->MessageSid;
@@ -71,12 +72,13 @@ class MessageAnnotationsFactoryResponse extends RestResponse
 				{
 					$annotationXml = $annotationsXml->addChild('Annotation');
 					$annotationXml->addChild('Sid', $annotation->id);
+					$annotationXml->addChild('ActionSid', $annotation->action_id);
 					$annotationXml->addChild('Type', $annotation->annotation_type);
 					$annotationXml->addChild('UserSid', $annotation->user_id);
 					$annotationXml->addChild('FirstName', $annotation->first_name);
 					$annotationXml->addChild('LastName' , $annotation->last_name);
 					$annotationXml->addChild('Description' , $annotation->description);
-					$annotationXml->addChild('Created' , $annotation->created);
+					$annotationXml->addChild('Created' , utc_time_rfc2822($annotation->created));
 				}
 
 				$xml->addChild('MessageSid', $this->MessageSid);

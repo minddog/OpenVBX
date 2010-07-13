@@ -260,3 +260,14 @@ function html($data)
 	}
 	return $data;
 }
+
+/* Formats any string to VBX UTC Time Standard: RFC2822 */
+function utc_time_rfc2822($str)
+{
+	$time = strtotime($str);
+
+	if(!$time)
+		return false;
+	
+	return date('r', $time);
+}

@@ -125,6 +125,8 @@ class VBX_Sms_message extends Model {
 			error_log($response->ErrorMessage);
 			throw new VBX_Sms_messageException($response->ErrorMessage);
 		}
+
+		return $response->ResponseXml->SMSMessage;
 	}
 
 }

@@ -21,9 +21,52 @@
 
 class LabelsInstanceResource extends RestResource
 {
+	private $Sid;
+	
+	public function __construct($params)
+	{
+		parent::__construct();
+		$this->LabelName = !empty($params['LabelName'])? $params['LabelName'] : null;
+		
+		if(!$this->LabelName)
+			throw new Exception('Missing LabelName');
+	}
+	
 	public function get()
 	{
-		return new NotImplementedRestResponse();
+		$user = OpenVBX::getCurrentUser();
+
+		$groups = array(0);
+		if(strtolower($this->LabelName) != 'inbox')
+		{
+			$group = VBX_Group::get(array('name' => $this->LabelName));
+			if(!$group)
+				throw new Exception('No label found by the name: '.$this->LabelName);
+			
+			$groups = array($group->id);
+			$folders = VBX_Message::get_folders($user->id, $groups);
+			
+			if(!isset($folders[$group->id]))
+				throw new Exception('No label found by the name: '.$this->LabelName);
+			$folder = $folders[$group->id];
+			
+		}
+		else
+		{
+			$folders = VBX_Message::get_folders($user->id, $groups);
+			$folder = $folders[0];
+		}
+		
+		$response = new LabelInstanceResponse();
+		$response->Name = $folder->name;
+		$response->Sid = $folder->id;
+		$response->Archived = $folder->archived;
+		$response->Type = $folder->type;
+		$response->New = $folder->new;
+		$response->Read = $folder->read;
+		$response->Total = $folder->total;
+
+		return $response;
 	}
 
 	public function post()

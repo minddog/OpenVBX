@@ -50,9 +50,24 @@ class MessageInstanceResponse extends RestResponse
 									 'Assigned' => $message->assigned_to,
 									 'Archived' => ($message->status == 'archived')? true : false,
 									 'Unread' => ($message->status == 'new')? true : false,
-									 'TimeReceived' => date('c', strtotime($message->created)),
-									 'LastUpdated' => date('c', strtotime($message->updated)),
+									 'TimeReceived' => utc_time_rfc2822($message->created),
+									 'LastUpdated' => utc_time_rfc2822($message->updated),
+									 'Owner' => array(
+													  'UserSid' => $message->owner_type == 'user'? $message->owner_id : null,
+													  'GroupSid' => $message->owner_type == 'group'? $message->owner_id : null,
+													  ),
 									 );
+				
+				$messageJSON['AvailableOwners'] = null;
+				foreach($this->AvailableOwners as $owner)
+				{
+					$messageJSON['AvailableOwners'][] = array(
+															'FirstName' => $owner->first_name,
+															'LastName' => $owner->last_name,
+															'Email' => $owner->email,
+															'Sid' => $owner->id,
+															);
+				}
 
 				return json_encode($messageJSON);
 			case 'xml':
@@ -65,8 +80,8 @@ class MessageInstanceResponse extends RestResponse
 				$messageXml->addChild('From', format_phone($message->caller));
 				$messageXml->addChild('To', format_phone($message->called));
 				$messageXml->addChild('Body', $message->content_text);
-				$messageXml->addChild('TimeReceived', $message->created);
-				$messageXml->addChild('LastUpdated', $message->updated);
+				$messageXml->addChild('TimeReceived', utc_time_rfc2822($message->created));
+				$messageXml->addChild('LastUpdated', utc_time_rfc2822($message->updated));
 				$messageXml->addChild('RecordingUrl', $message->content_url);
 				$messageXml->addChild('RecordingLength', $message->content_url? format_player_time($message->size) : null);
 				$messageXml->addChild('Type', $message->type);
@@ -74,6 +89,19 @@ class MessageInstanceResponse extends RestResponse
 				$messageXml->addChild('Status', $message->status);
 				$messageXml->addChild('Archived', ($message->status == 'archived')? 'true' : 'false');
 				$messageXml->addChild('Unread', ($message->status == 'new')? 'true' : 'false');
+				$ownerXml = $messageXml->addChild('Owner');
+				$ownerXml->addChild('UserSid', $message->owner_type == 'user'? $message->owner_id : null);
+				$ownerXml->addChild('GroupSid', $message->owner_type == 'group'? $message->owner_id : null);
+				
+				$availOwnersXml = $messageXml->addChild('AvailableOwners');
+				foreach($this->AvailableOwners as $owner)
+				{
+					$ownerXml = $availOwnersXml->addChild('AvailableOwner');
+					$ownerXml->addChild('FirstName', $owner->first_name);
+					$ownerXml->addChild('LastName', $owner->last_name);
+					$ownerXml->addChild('Email', $owner->email);
+					$ownerXml->addChild('Sid', $owner->id);
+				}
 				
 				return $xml->asXML();
 				

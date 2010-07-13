@@ -37,10 +37,11 @@ class MessagesInstanceResource extends RestResource
 		$ci = &get_instance();
 		$ci->load->model('vbx_message');
 		$message = $ci->vbx_message->get_message($this->Sid);
-		
 		$response = new MessageInstanceResponse();
 		$response->Sid = $this->Sid;
 		$response->Message = $message;
+		$response->AvailableOwners = $ci->vbx_user->get_active_users();
+		
 		return $response;
 	}
 

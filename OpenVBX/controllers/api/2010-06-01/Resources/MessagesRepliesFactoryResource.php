@@ -19,7 +19,7 @@
  * Contributor(s):
  **/
 
-class InboxMessagesRepliesFactoryResource extends RestResource
+class MessagesRepliesFactoryResource extends RestResource
 {
 	const REPLY_SMS = 'sms';
 	const REPLY_CALLS = 'called';
@@ -66,15 +66,14 @@ class InboxMessagesRepliesFactoryResource extends RestResource
 																	 array(
 																		   'annotation_types' => $this->getAnnotationTypes()
 																		   ));
-
 			$total = count($annotations);
-			$annotations = array_slice($annotations, $offset, $max);
+			$replies = array_slice($annotations, $offset, $max);
 		}
 
 		/* Build Response */
-		$response = new MessageAnnotationsFactoryResponse();
+		$response = new MessageRepliesFactoryResponse();
 		$response->MessageSid = $this->MessageSid;
-		$response->Annotations = $annotations;
+		$response->Replies = $replies;
 		$response->Offset = $offset;
 		$response->Max = $max;
 		$response->Total = $total;
@@ -87,8 +86,10 @@ class InboxMessagesRepliesFactoryResource extends RestResource
 		{
 			case 'SmsMessages':
 				$response = $this->postSmsMessages();
+				break;
 			case 'Calls':
 				$response = $this->postCalls();
+				break;
 			default:
 				return new NotImplementedRestResponse();
 		}
@@ -102,7 +103,7 @@ class InboxMessagesRepliesFactoryResource extends RestResource
 		$user = OpenVBX::getCurrentUser();
 		$response = new RestResponse();
 
-		$content = substr($ci->input->post('content'), 0, 160);
+		$body = substr($ci->input->post('body'), 0, 160);
 		$to = preg_replace('/[^0-9]*/','', $ci->input->post('to'));
 		$from = $ci->input->post('from');
 		$numbers = array();
@@ -120,7 +121,7 @@ class InboxMessagesRepliesFactoryResource extends RestResource
 			}
 			catch(VBX_IncomingNumberException $e)
 			{
-				throw new Message_TextException("Unable to retrieve numbers from twilio account: ".$e->getMessage());
+				throw new Exception("Unable to retrieve numbers from twilio account: ".$e->getMessage());
 			}
 		}
 
@@ -133,23 +134,28 @@ class InboxMessagesRepliesFactoryResource extends RestResource
 				$from = $devices[0]->value;
 			}
 		}
-		
+
 		/* Create a one time pass for Twilio's Rest Access */
 		$ci->load->model('vbx_rest_access');
 		$rest_access = $ci->vbx_rest_access->make_key($ci->session->userdata('user_id'));
 
 		$ci->load->model('vbx_sms_message');
-		$ci->vbx_sms_message->send_message($from, $to, $content);
-		$sid = $ci->vbx_message->annotate($this->MessageSid,
+		$sms = $ci->vbx_sms_message->send_message($from, $to, $body);
+		$annotationSid = $ci->vbx_message->annotate($this->MessageSid,
 													$user->id,
-													"$from to ".format_phone($to).": $content",
-													'sms');
+													"$from to ".format_phone($to).": $body",
+													'sms',
+													$sms->Sid
+													);
 		
-		$response->Sid = $sid;
+		$response = new SmsMessageInstanceResponse();
+		$response->Sid = $sms->Sid;
+		$response->ReplySid = $annotationSid;
 		$response->MessageSid = $this->MessageSid;
+		$response->DateSent = $sms->DateSent;
 		$response->From = $from;
 		$response->To = $to;
-		$response->Body = $content;
+		$response->Body = $body;
 		
 		return $response;
 	}
@@ -179,18 +185,27 @@ class InboxMessagesRepliesFactoryResource extends RestResource
 		$rest_access = $ci->vbx_rest_access->make_key($ci->session->userdata('user_id'));
 
 		$ci->load->model('vbx_call');
-		$ci->vbx_call->make_call($from, $to, $callerid, $rest_access);
+		$call = $ci->vbx_call->make_call($from, $to, $callerid, $rest_access);
 		
-		$sid = $ci->vbx_message->annotate($this->MessageSid,
+		$annotationSid = $ci->vbx_message->annotate($this->MessageSid,
 										  $user->id,
 										  'Called back from voicemail',
-										  'called');
+										  'called',
+										  $call->Sid);
 
-		$response->Sid = $sid;
+		$response = new CallInstanceResponse();
+		$response->Sid = $call->Sid;
+		$response->ReplySid = $annotationSid;
 		$response->MessageSid = $this->MessageSid;
+		
+		$response->StartTime = $call->StartTime;
+		$response->EndTime = $call->EndTime;
+		$response->Price = $call->Price;
+		$response->Status = $call->Status;
 		$response->From = $from;
 		$response->To = $to;
 		$response->CallerId = $callerid;
+		$response->TwilioAccountSid = $ci->twilio_sid;
 		
 		return $response;
 	}

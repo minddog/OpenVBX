@@ -43,10 +43,13 @@ class Api_2010_06_01 extends Rest_Controller
 												'Messages/{Sid}' => 'MessagesInstanceResource', /* message Detail */
 												'Messages' => 'MessagesFactoryResource', /* list of all messages */
 
+												'Calls' => 'CallsFactoryResource', /* Make outbound calls and retrieve call logs */
 												
-												'Labels/{Name}/Messages' => 'MessagesFactoryResource', /* list of messages in label resource */
-												'Labels/{Name}' => 'LabelsInstanceResource', /* detail about the label resource instance */
 												'Labels' => 'LabelsFactoryResource', /* list of all label resource instances */
+												'Labels/{LabelName}/Messages' => 'MessagesFactoryResource', /* list of messages in label resource */
+												'Labels/{LabelName}' => 'LabelsInstanceResource', /* detail about the label resource instance */
+												'Numbers' => 'NumbersFactoryResource',
+												
 												);
 	}
 	

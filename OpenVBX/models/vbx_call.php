@@ -62,8 +62,8 @@ class VBX_Call extends Model {
 			$data = apc_fetch($page_cache_key, $success);
 
 			if($data AND $success) {
-				$output = @unserialize($data);
-				if(is_array($output)) return $output;
+				$calls = @json_decode($data);
+				if(is_array($calls)) return $calls;
 			}
 		}
 
@@ -75,33 +75,15 @@ class VBX_Call extends Model {
 		{
 			throw new VBX_CallException($response->ErrorMessage, $response->HttpStatus);
 		}
-		else
-		{
 
-			$this->total = (string) $response->ResponseXml->Calls['total'];
-			$records = $response->ResponseXml->Calls->Call;
-
-			foreach($records as $record)
-			{
-				$item = new stdClass();
-				$item->id = (string) $record->Sid;
-				$item->caller = format_phone($record->Caller);
-				$item->called = format_phone($record->Called);
-				$item->status = Call::get_status((string) $record->Status);
-				$item->start = isset($record->StartTime) ? strtotime($record->StartTime) : null;
-				$item->end = isset($record->EndTime) ? strtotime($record->EndTime) : null;
-				$item->seconds = isset($record->Duration) ? (string) $record->Duration : 0;
-
-				$output[] = $item;
-			}
-		}
-
+		$calls = $response->ResponseXml->Calls;
+		
 		if(function_exists('apc_store')) {
-			apc_store($page_cache_key, serialize($output), self::CACHE_TIME_SEC);
+			apc_store($page_cache_key, json_encode($calls), self::CACHE_TIME_SEC);
 			apc_store($total_cache_key, $this->total, self::CACHE_TIME_SEC);
 		}
-
-		return $output;
+		
+		return $calls;
 	}
 
 	function make_call($from, $to, $callerid, $rest_access)
@@ -134,6 +116,10 @@ class VBX_Call extends Model {
 			error_log($from);
 			throw new VBX_CallException($response->ErrorMessage);
 		}
+
+		/* HACK: Twilio isn't returning the start time properly on call initiation. */
+		$response->ResponseXml->Call->StartTime = $response->ResponseXml->Call->DateCreated;
+		return $response->ResponseXml->Call;
 	}
 
 

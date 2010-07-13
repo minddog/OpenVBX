@@ -23,7 +23,6 @@ switch(get_class($forward))
 				$devices[] = $device;
 			}
 		}
-		$voicemail = $groupVoicemail;
 		break;
 	default:
 		break;

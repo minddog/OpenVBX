@@ -65,8 +65,8 @@ class MessagesFactoryResponse extends RestResponse
 							  'Assigned' => $message->assigned_to,
 							  'Archived' => ($message->status == 'archived')? true : false,
 							  'Unread' => ($message->status == 'new')? true : false,
-							  'TimeReceived' => date('c', strtotime($message->created)),
-							  'LastUpdated' => date('c', strtotime($message->updated)),
+							  'TimeReceived' => utc_time_rfc2822($message->created),
+							  'LastUpdated' => utc_time_rfc2822($message->updated),
 							  );
 				}
 				return json_encode($messagesJSON);
@@ -83,8 +83,8 @@ class MessagesFactoryResponse extends RestResponse
 					$messageXml->addChild('From', format_phone($message->caller));
 					$messageXml->addChild('To', format_phone($message->called));
 					$messageXml->addChild('Body', $message->content_text);
-					$messageXml->addChild('TimeReceived', $message->created);
-					$messageXml->addChild('LastUpdated', $message->updated);
+					$messageXml->addChild('TimeReceived', utc_time_rfc2822($message->created));
+					$messageXml->addChild('LastUpdated', utc_time_rfc2822($message->updated));
 					$messageXml->addChild('RecordingUrl', $message->content_url);
 					$messageXml->addChild('RecordingLength', $message->content_url? format_player_time($message->size) : null);
 					$messageXml->addChild('Type', $message->type);

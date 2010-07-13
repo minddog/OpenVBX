@@ -25,7 +25,7 @@ class VBX_IncomingNumberException extends Exception {}
 
 class VBX_Incoming_numbers extends Model
 {
-	private $cache_key;
+   	private $cache_key;
 
 	const CACHE_TIME_SEC = 3600;
 
@@ -75,6 +75,85 @@ class VBX_Incoming_numbers extends Model
 		return $sandbox;
 	}
 
+	public static function get($options, $max, $offset)
+	{
+		$numbers = self::search($options, $max, $offset);
+		if(!$numbers)
+			return null;
+		
+		if(count($numbers->Numbers) > 0)
+			return $numbers->Numbers[0];
+	}
+
+	public static function search($options, $page = 0, $num = 50)
+	{
+		$numbers = array();
+		$search_cache_key = 'numbers'.$page.'-'.$num;
+		if(function_exists('apc_fetch')) {
+			// $success = FALSE;
+			// $data = apc_fetch($search_cache_key, $success);
+			// if($data AND $success) {
+				// $result = @unserialize($data);
+				// if(is_object($result)) return $result;
+			// }
+		}
+		
+		$result = new stdClass();
+		$result->Numbers = $numbers;
+		$result->Total = null;
+		$result->Max = $num;
+		$result->Page = $page;
+		
+		/* Get IncomingNumbers */
+		try
+		{
+			$ci = &get_instance();
+
+			$twilio = new TwilioRestClient($ci->twilio_sid,
+										   $ci->twilio_token,
+										   $ci->twilio_endpoint);
+			$response = $twilio->request("Accounts/{$ci->twilio_sid}/IncomingPhoneNumbers", 'GET', array('num' => $num,
+																										 'page' => $page ));
+		}
+		catch(TwilioException $e)
+		{
+			throw new VBX_IncomingNumberException('Failed to connect to Twilio.', 503);
+		}
+
+		if($response->IsError)
+		{
+			throw new VBX_IncomingNumberException($response->ErrorMessage, $response->HttpStatus);
+		}
+		
+
+		$items = array();
+		if(isset($response->ResponseXml->IncomingPhoneNumbers->IncomingPhoneNumber))
+		{
+			$phoneNumbers = $response->ResponseXml->IncomingPhoneNumbers->IncomingPhoneNumber
+				? $response->ResponseXml->IncomingPhoneNumbers->IncomingPhoneNumber
+				: array($response->ResponseXml->IncomingPhoneNumbers->IncomingPhoneNumber);
+			foreach($phoneNumbers as $number)
+			{
+				$items[] = $number;
+			}
+		}
+		
+		foreach($items as $item)
+		{
+			$numbers[] = self::parseIncomingPhoneNumber($item);
+		}
+		
+		$result->Numbers = $numbers;
+		$result->Max = $num;
+		$result->Total = $response->ResponseXml->IncomingPhoneNumbers['total'];
+		if(function_exists('apc_store')) {
+			$success = apc_store($search_cache_key, serialize($result), self::CACHE_TIME_SEC);
+		}
+		
+		return $result;
+	}
+
+	/* TODO: Deprecate this method in favor of self::search() */
 	function get_numbers($retrieve_sandbox = true)
 	{
 		$numbers = array();

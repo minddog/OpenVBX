@@ -1,17 +1,9 @@
 local:
-    vbxURL: 'http://openvbx.local'
-    version: '2010-06-01'
-	userEmail:
-	userPassword:
-	adminEmail:
-	adminPassword:
-	
-dev:
-    vbxURL: 'http://openvbx.dev'
-    version: '2010-06-01'
-	userEmail:
-	userPassword:
-	adminEmail:
-	adminPassword:
-	
-prod:
+    vbxURL: 
+    version: 
+    userEmail:
+    userPassword:
+    adminEmail:
+    adminPassword:
+    testingPhoneNumber: 
+    testingTwilioNumber:

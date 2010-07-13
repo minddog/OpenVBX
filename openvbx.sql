@@ -180,6 +180,7 @@ CREATE TABLE IF NOT EXISTS `annotations` (
   `description` text character set latin1 NOT NULL,
   `created` datetime NOT NULL,
   `tenant_id` BIGINT(20) NOT NULL,
+  `action_id` VARCHAR(34) NULL DEFAULT NULL,
   PRIMARY KEY  (`id`),
   KEY `annotation_type_message_id` (`annotation_type`,`message_id`,`created`),
   KEY `created` (`created`),

@@ -437,6 +437,7 @@ class VBX_Message extends Model {
 			 ->limit($size, $offset)
 			 ->get()
 			 ->result();
+		
 		return $result;
 	}
 
@@ -734,22 +735,40 @@ class VBX_Message extends Model {
 		return $message_annotations;
 	}
 
-	function annotate($message_id, $user_id, $description, $annotation_type_key)
+	function annotate($message_id, $user_id, $description, $annotation_type_key, $action_id = '')
 	{
+		
         $ci =& get_instance();
 		if(!($annotation_type = $this->get_annotation_type($annotation_type_key)))
 		{
 			throw new VBX_MessageException('Annotation type does not exist: '.$annotation_type_key);
 		}
 
-		$ci->db
-			 ->set('message_id', $message_id)
-			 ->set('user_id', $user_id)
-			 ->set('description', $description)
-			 ->set('annotation_type', $annotation_type)
-			 ->set('created', 'UTC_TIMESTAMP()', false)
-             ->set('tenant_id', $ci->tenant->id)
-			 ->insert('annotations');
+		if(OpenVBX::schemaVersion() > 36)
+		{
+			$ci->db
+				->set('message_id', $message_id)
+				->set('user_id', $user_id)
+				->set('description', $description)
+				->set('annotation_type', $annotation_type)
+				->set('created', 'UTC_TIMESTAMP()', false)
+				->set('tenant_id', $ci->tenant->id)
+				/* action_id: Can be any 34 character twilio action */
+				->set('action_id', (string)$action_id)
+				->insert('annotations');
+		}
+		else
+		{
+			$ci->db
+				->set('message_id', $message_id)
+				->set('user_id', $user_id)
+				->set('description', $description)
+				->set('annotation_type', $annotation_type)
+				->set('created', 'UTC_TIMESTAMP()', false)
+				->set('tenant_id', $ci->tenant->id)
+				->insert('annotations');
+		}
+		
 		return $ci->db->insert_id();
 	}
 

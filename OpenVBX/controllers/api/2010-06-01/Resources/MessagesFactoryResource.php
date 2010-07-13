@@ -21,6 +21,12 @@
 
 class MessagesFactoryResource extends RestResource
 {
+	public function __construct($params)
+	{
+		parent::__construct();
+		$this->LabelName = isset($params['LabelName'])? $params['LabelName'] : null;
+	}
+	
 	public function get()
 	{
 		/* Available query string options: ?max=&offset= */
@@ -33,6 +39,29 @@ class MessagesFactoryResource extends RestResource
 		$body = $ci->input->get('body', false);
 		$ticket_status = input_array($ci->input->get('ticket_status'), array('all'));
 		$response = new MessagesFactoryResponse();
+		$user = OpenVBX::getCurrentUser();
+		if($this->LabelName && strtolower($this->LabelName) != 'inbox')
+		{
+			$group = VBX_Group::get(array('name' => $this->LabelName));
+			if(!$group)
+				throw new Exception('No label found by the name: '.$this->LabelName);
+			
+			$groups = array($group->id);
+			$folders = VBX_Message::get_folders($user->id, $groups);
+			
+			if(!isset($folders[$group->id]))
+				throw new Exception('No label found by the name: '.$this->LabelName);
+			$folder = $folders[$group->id];
+			
+			$users = null;
+			$groups = array($group->id);
+		}
+		else
+		{
+			$users = array($user->id);
+			$groups = VBX_User::get_group_ids($user->id);
+		}
+		
 		
 		$message = new VBX_Message();
 		$messages = $message->get_messages(array('ticket_status' => $ticket_status,
@@ -40,6 +69,8 @@ class MessagesFactoryResource extends RestResource
 												 'from' => $from,
 												 'to' => $to,
 												 'body' => $body,
+												 'user' => $users,
+												 'group' => $groups,
 												 ), $offset, $max);
 		$response->Messages = $messages['messages'];
 		$response->Total = $messages['total'];

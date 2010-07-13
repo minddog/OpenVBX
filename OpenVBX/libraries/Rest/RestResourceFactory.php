@@ -32,7 +32,7 @@ class RestResourceFactory
 		foreach(self::$resources as $resource_uri => $class)
 		{
 			$resource_expr = preg_replace('/({([^\/]+)})/' , '(?P<\2>[^\/]+)', $resource_uri);
-			if(preg_match('#'.$resource_expr.'(/)?$#', $resource, $matches))
+			if(preg_match('#^'.$resource_expr.'(/)?$#', $resource, $matches))
 			{
 				preg_match_all('/{([^\/]+)}/' , $resource_uri, $items);
 				if(count($items) > 1)
