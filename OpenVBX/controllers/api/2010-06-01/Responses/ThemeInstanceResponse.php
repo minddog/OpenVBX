@@ -19,13 +19,15 @@
  * Contributor(s):
  **/
 
-class NotImplementedRestResponse extends RestResponse
+class ThemeInstanceResponse extends RestResponse
 {
-	public function __construct()
+	public function __construct($properties = array())
 	{
 		parent::__construct();
-		$this->response->Error = true;
-		$this->response->Message = 'Not Implemented';
+		foreach($properties as $prop => $val)
+		{
+			$this->response->$prop = $val;
+		}
 	}
 
 	public function encode($format)
@@ -36,15 +38,22 @@ class NotImplementedRestResponse extends RestResponse
 		switch($format)
 		{
 			case 'json':
-				if($version != 'index')
-					$this->response->Version = $version;
-				return json_encode($this->response);
+				if(!is_object($this->response))
+					throw new Exception('Response data not an object');
+				$themeJSON->Configuration = json_decode($this->Configuration);
+				$themeJSON->Name = $this->ThemeName;
+				$themeJSON->Version = $version;
+
+				return json_encode($themeJSON);
 			case 'xml':
 				$xml = new SimpleXMLElement('<Response />');
-				if($version != 'index')
-					$xml->addAttribute('version', $version);
-				$child = $xml->addChild('Error', 'true');
-				$child = $xml->addChild('Message', $this->response->Message);
+				$xml->addAttribute('version', $version);
+				/* Label Properties */
+				$themeXml = $xml->addChild('Theme');
+				
+				$themeXml->addChild('Name', $this->ThemeName);
+				$themeXml->addChild('Configuration', $this->Configuration);
+				
 				return $xml->asXML();
 		}
 	}

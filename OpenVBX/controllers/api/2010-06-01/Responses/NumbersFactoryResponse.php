@@ -37,14 +37,13 @@ class NumbersFactoryResponse extends RestResponse
 				
 				if(!is_object($this->response))
 					throw new Exception('Response data not an object');
-
-				$this->response->Version = $version;
 				
 				$numbersJSON = new stdClass();
 				$numbersJSON->Numbers = array();
-				$numbersJSON->Total = $this->Total;
+				$numbersJSON->Total = (int)$this->Total;
 				$numbersJSON->Max = $this->Max;
 				$numbersJSON->Page = $this->Page;
+				$numbersJSON->Version = $version;
 				
 				foreach($this->Numbers as $number)
 				{

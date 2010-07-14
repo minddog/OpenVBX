@@ -317,7 +317,7 @@ class Devices extends User_Controller {
 
 		if($this->response_type == 'html')
 		{
-			echo 'test';exit;
+			exit;
 		}
 		
 		$data['json'] = $response;

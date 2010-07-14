@@ -43,9 +43,9 @@ class CallInstanceResponse extends RestResponse
 		switch($format)
 		{
 			case 'json':
-				$this->response->version = $version;
 				$callJSON =
 					 array(
+						   'Version' => $version,
 						   'Sid' => $this->Sid,
 						   'ReplySid' => $this->ReplySid,
 						   'MessageSid' => $this->MessageSid,

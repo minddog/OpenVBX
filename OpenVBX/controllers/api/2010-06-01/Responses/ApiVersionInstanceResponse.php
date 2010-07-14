@@ -19,13 +19,12 @@
  * Contributor(s):
  **/
 
-class NotImplementedRestResponse extends RestResponse
+class ApiVersionInstanceResponse extends RestResponse
 {
-	public function __construct()
+	public function __construct($methods)
 	{
 		parent::__construct();
-		$this->response->Error = true;
-		$this->response->Message = 'Not Implemented';
+		$this->Methods = $methods;
 	}
 
 	public function encode($format)
@@ -36,15 +35,25 @@ class NotImplementedRestResponse extends RestResponse
 		switch($format)
 		{
 			case 'json':
-				if($version != 'index')
-					$this->response->Version = $version;
+				if(!is_object($this->response))
+					throw new Exception('Response data not an object');
+
+				$this->response->Version = $version;
 				return json_encode($this->response);
 			case 'xml':
 				$xml = new SimpleXMLElement('<Response />');
-				if($version != 'index')
-					$xml->addAttribute('version', $version);
-				$child = $xml->addChild('Error', 'true');
-				$child = $xml->addChild('Message', $this->response->Message);
+				$xml->addAttribute('version', $version);
+				/* Label Properties */
+				$labelXml = $xml->addChild('Label');
+				
+				$labelXml->addChild('Name', $this->Name);
+				$labelXml->addChild('Archived', $this->Archived);
+				$labelXml->addChild('Total', $this->Total);
+				$labelXml->addChild('Read', $this->Read);
+				$labelXml->addChild('New', $this->New);
+				$labelXml->addChild('Sid', $this->Sid);
+				$labelXml->addChild('Type', $this->Type);
+				
 				return $xml->asXML();
 		}
 	}

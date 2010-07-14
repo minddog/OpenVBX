@@ -42,8 +42,7 @@ class SmsMessageInstanceResponse extends RestResponse
 		switch($format)
 		{
 			case 'json':
-				$this->response->version = $version;
-				$callJSON =
+				$smsMessageJSON =
 					 array(
 						   'Sid' => $this->Sid,
 						   'ReplySid' => $this->ReplySid,
@@ -54,9 +53,10 @@ class SmsMessageInstanceResponse extends RestResponse
 						   'DateSent' => utc_time_rfc2822($this->DateSent),
 						   'Price' => $this->Price,
 						   'Flags' => $this->Flags,
+						   'Version' => $version,
 						   );
 
-				return json_encode($callJSON);
+				return json_encode($smsMessageJSON);
 			case 'xml':
 				$xml = new SimpleXMLElement('<Response />');
 				$xml->addAttribute('version', $version);

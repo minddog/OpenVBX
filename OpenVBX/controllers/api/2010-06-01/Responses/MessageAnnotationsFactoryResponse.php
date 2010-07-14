@@ -39,7 +39,6 @@ class MessageAnnotationsFactoryResponse extends RestResponse
 		switch($format)
 		{
 			case 'json':
-				$this->response->version = $version;
 				$annotationsJSON = new stdClass();
 				$annotationsJSON->Annotations = array();
 				foreach($annotations as $annotation)
@@ -60,7 +59,7 @@ class MessageAnnotationsFactoryResponse extends RestResponse
 				$annotationsJSON->Total = $this->Total;
 				$annotationsJSON->Max = $this->Max;
 				$annotationsJSON->Offset = $this->Offset;
-				
+				$annotationsJSON->Version = $version;
 				return json_encode($annotationsJSON);
 			case 'xml':
 				$xml = new SimpleXMLElement('<Response />');

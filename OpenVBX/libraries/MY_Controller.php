@@ -424,6 +424,114 @@ class MY_Controller extends Controller
 	{
 		return $this->tenant;
 	}
+
+		function digest_parse($digest)
+	{
+		// protect against missing data
+		$needed_parts = array('nonce'=>1, 'nc'=>1, 'cnonce'=>1, 'qop'=>1, 'username'=>1, 'uri'=>1, 'response'=>1);
+		$data = array();
+		
+		preg_match_all('@(\w+)=(?:(?:\'([^\']+)\'|"([^"]+)")|([^\s,]+))@', $digest, $matches, PREG_SET_ORDER);
+
+		foreach ($matches as $m) {
+			$data[$m[1]] = $m[2] ? $m[2] : ($m[3] ? $m[3] : $m[4]);
+			unset($needed_parts[$m[1]]);
+		}
+
+		return $needed_parts ? false : $data;
+	}
+	
+
+	function attempt_digest_auth() {
+		$message = '';
+
+		if(isset($_SERVER['Authorization'])) {
+			// Just in case they ever fix Apache to send the Authorization header on, the following code is included
+			$headers['Authorization'] = $_SERVER['Authorization'];
+		}
+		
+		if(function_exists('apache_request_headers')) {
+			// We are running PHP as an Apache module, so we can get the Authorization header this way
+			$headers = apache_request_headers();
+		}
+		
+		if(isset($_SERVER['PHP_AUTH_USER']) && isset($_SERVER['PHP_AUTH_PW'])) {
+			// Basic authentication information can be retrieved from these server variables
+			$username = $_SERVER['PHP_AUTH_USER'];
+			$password = $_SERVER['PHP_AUTH_PW'];
+		}
+		
+		
+		if(isset($headers['Authorization'])) {
+			$_SERVER['PHP_AUTH_DIGEST'] = $headers['Authorization'];
+			$data = $this->digest_parse($_SERVER['PHP_AUTH_DIGEST']);
+		}
+
+		$captcha = '';
+		if(isset($headers['Captcha']))
+		{
+			$captcha = $headers['Captcha'];
+		}
+
+		$captcha_token = '';
+		if(isset($headers['CaptchaToken']))
+		{
+			$captcha_token = $headers['CaptchaToken'];
+		}
+		
+		if (isset($username)
+			&& isset($password))
+		{
+			log_message('info', 'Authenticating user: '.var_export($username, true));
+			
+			$u = VBX_User::authenticate($username,
+										$password,
+										$captcha,
+										$captcha_token);
+			if($u)
+			{
+				$next = $this->session->userdata('next');
+				$this->session->unset_userdata('next');
+				$userdata = array('email' => $u->email,
+								  'user_id' => $u->id,
+								  'is_admin' => $u->is_admin,
+								  'loggedin' => TRUE,
+								  'signature' => VBX_User::signature($u->id),
+								  );
+
+				$this->session->set_userdata($userdata);
+			}
+		}
+		
+		if(!$this->session->userdata('loggedin'))
+		{
+			$version = OpenVBX::version();
+			header("WWW-Authenticate: Basic realm=\"OpenVBX\"");
+			header("HTTP/1.1 401 Unauthorized");
+			/* Emit headers */
+			header("X-OpenVBX-Version: $version");
+			header("Content-type: application/{$this->response_type}");
+
+			switch($this->response_type)
+			{
+				case 'xml':
+					$xml = new SimpleXmlElement('<Response />');
+					$xml->addChild('Error', 'true');
+					$xml->addChild('Message', '401 Not Authorized');
+					echo $xml->asXml();
+					break;
+				case 'json':
+					echo json_encode(array('error' => true, 'message' => '401 Not Authorized'));
+					break;
+				default:
+					include(APPPATH.'errors/error_401.php');
+					break;
+			}
+			exit;
+		}
+
+		return $message;
+	}
 }
 
 require_once 'User_Controller.php';

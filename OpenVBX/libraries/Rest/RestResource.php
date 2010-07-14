@@ -22,13 +22,57 @@
 class RestResourceException extends Exception {}
 class RestResource
 {
+	protected $loginRequired = true;
+	
 	public function __construct()
 	{
 		/* Do Nothing */
 	}	
+
+	private function checkForValidLogin()
+	{
+		$ci = &get_instance();
+		if(!$ci->session->userdata('loggedin'))
+		{
+			throw new RestResourceException("Private Rest Resource: Valid authenticated credentials required.", 401);
+		}
+		else
+		{
+			$user_id = $ci->session->userdata('user_id');
+			$signature = $ci->session->userdata('signature');
+			if(VBX_User::signature($user_id) != $signature)
+				throw new RestResourceException("Private Rest Resource: Signature has expired", 401);
+		}
+	}
+
+	private function loginUser()
+	{
+		$ci = &get_instance();
+		$ci->attempt_digest_auth();
+	}
 	
 	public function run($method)
 	{
+		/* Throws exception if login required and invalid credentials */
+		if($this->loginRequired)
+		{
+			try
+			{
+				$this->checkForValidLogin();
+			}
+			catch(RestResourceException $e)
+			{
+				if($e->getCode() >= 400)
+				{
+					$this->loginUser();
+				}
+				else
+				{
+					throw $e;
+				}
+			}
+		}
+		
 		if(method_exists($this, strtolower($method)))
 			return $this->$method();
 		

@@ -21,11 +21,14 @@
 
 class ExceptionRestResponse extends RestResponse
 {
-	public function __construct($errmsg)
+	private $ErrorCode;
+
+	public function __construct($errmsg, $errcode)
 	{
 		parent::__construct(new stdClass());
 		$this->response->Error = true;
 		$this->response->Message = $errmsg;
+		$this->ErrorCode = $errcode;
 	}
 
 	public function encode($format)
@@ -33,18 +36,23 @@ class ExceptionRestResponse extends RestResponse
 		$ci = &get_instance();
 		$version = $ci->version;
 		
+		if($this->ErrorCode >= 200)
+			header('x', TRUE, $this->ErrorCode);
+		
 		switch($format)
 		{
 			case 'json':
 				if(!is_object($this->response))
 					throw new Exception('Response data not an object');
 
-				$this->response->Version = $version;
+				if($version != 'index')
+					$this->response->Version = $version;
 				
 				return json_encode($this->response);
 			case 'xml':
 				$xml = new SimpleXMLElement('<Response />');
-				$xml->addAttribute('version', $version);
+				if($version != 'index')
+					$xml->addAttribute('version', $version);
 				$child = $xml->addChild('Error', 'true');
 				$child = $xml->addChild('Message', $this->response->Message);
 				return $xml->asXML();

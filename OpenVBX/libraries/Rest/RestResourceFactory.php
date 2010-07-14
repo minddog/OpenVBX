@@ -49,6 +49,6 @@ class RestResourceFactory
 			}
 
 		}
-		throw new RestResourceFactoryException("Unable to locate resource: $resource");
+		throw new RestResourceFactoryException("Unable to locate resource: $resource", 404);
 	}
 }

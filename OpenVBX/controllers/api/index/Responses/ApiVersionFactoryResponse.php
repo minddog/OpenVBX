@@ -1,4 +1,4 @@
-<?php
+<?php if (!defined('BASEPATH')) exit('No direct script access allowed');
 /**
  * "The contents of this file are subject to the Mozilla Public License
  *  Version 1.1 (the "License"); you may not use this file except in
@@ -18,41 +18,37 @@
 
  * Contributor(s):
  **/
-	
-class VBX_ThemeException extends Exception {}
 
-class VBX_Theme extends Model
+class ApiVersionFactoryResponse extends RestResponse
 {
 	public function __construct()
 	{
 		parent::__construct();
-		$this->load->helper('file');
-		$this->load->helper('directory');
 	}
 
-	public function is_valid($name)
+	public function encode($format)
 	{
-		$name = preg_replace('/[^0-9a-zA-Z-_]/', '', $name);
-		$themes = directory_map('assets/themes', true);
-		if(in_array($name, $themes))
-		{
-			return true;
-		}
-
-		return false;
-	}
-
-	public function get_all()
-	{
-		$themes = directory_map('assets/themes', true);
+		$ci = &get_instance();
 		
-		return $themes;
+		switch($format)
+		{
+			case 'json':
+				if(!is_object($this->response))
+					throw new Exception('Response data not an object');
+				
+				return json_encode($this->response);
+			case 'xml':
+				$xml = new SimpleXMLElement('<Response />');
+				$versionsXml = $xml->addChild('Versions');
+				$configurationXml = $xml->addChild('ClientConfiguration');
+				$configurationXml->addChild('RequireTrustedCertificate', ($this->Configuration->RequireTrustedCertificate)? 'true' : 'false');
+				
+				foreach($this->Versions as $version)
+				{
+					$versionsXml->addChild('Version', $version);
+				}
+				
+				return $xml->asXML();
+		}
 	}
-
-	public function get_iphone_json($name)
-	{
-		$name = preg_replace('/[^0-9a-zA-Z-_]/', '', $name);
-		return read_file('assets/themes/'.$name.'/iphone.json');
-	}
-
 }

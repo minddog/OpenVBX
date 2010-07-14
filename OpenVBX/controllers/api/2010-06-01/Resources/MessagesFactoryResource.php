@@ -31,6 +31,7 @@ class MessagesFactoryResource extends RestResource
 	{
 		/* Available query string options: ?max=&offset= */
 		$ci = &get_instance();
+		$ci->load->model('vbx_message');
 		$max = input_int($ci->input->get('max'), 10);
 		$offset = intval($ci->input->get('offset', 0));
 		$archived = input_bool($ci->input->get('archived', false));

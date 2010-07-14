@@ -1,4 +1,4 @@
-<?php
+<?php if (!defined('BASEPATH')) exit('No direct script access allowed');
 /**
  * "The contents of this file are subject to the Mozilla Public License
  *  Version 1.1 (the "License"); you may not use this file except in
@@ -18,41 +18,43 @@
 
  * Contributor(s):
  **/
-	
-class VBX_ThemeException extends Exception {}
 
-class VBX_Theme extends Model
+class ApiVersionFactoryResource extends RestResource
 {
 	public function __construct()
 	{
 		parent::__construct();
-		$this->load->helper('file');
-		$this->load->helper('directory');
+		$this->loginRequired = false;
 	}
 
-	public function is_valid($name)
+	public function get()
 	{
-		$name = preg_replace('/[^0-9a-zA-Z-_]/', '', $name);
-		$themes = directory_map('assets/themes', true);
-		if(in_array($name, $themes))
-		{
-			return true;
-		}
-
-		return false;
-	}
-
-	public function get_all()
-	{
-		$themes = directory_map('assets/themes', true);
+		$supportedVersions = array(
+								   '2010-06-01',
+								   );
 		
-		return $themes;
+		$response = new ApiVersionFactoryResponse();
+		
+		$response->Versions = $supportedVersions;
+		$response->ClientConfiguration = new stdClass();
+		$response->ClientConfiguration->RequireTrustedCertificate = true;
+		
+		return $response;
 	}
 
-	public function get_iphone_json($name)
+	public function post()
 	{
-		$name = preg_replace('/[^0-9a-zA-Z-_]/', '', $name);
-		return read_file('assets/themes/'.$name.'/iphone.json');
+		return new NotImplementedRestResponse();
+	}
+	
+	public function put()
+	{
+		return new NotImplementedRestResponse();
+	}
+
+	public function delete()
+	{
+		return new NotImplementedRestResponse();
 	}
 
 }

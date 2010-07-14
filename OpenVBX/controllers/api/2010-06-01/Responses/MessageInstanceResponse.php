@@ -35,8 +35,6 @@ class MessageInstanceResponse extends RestResponse
 		switch($format)
 		{
 			case 'json':
-				$this->response->version = $version;
-				
 				$messageJSON = array(
 									 'Sid' => $this->Sid,
 									 'From' => format_phone($message->caller),
@@ -58,17 +56,37 @@ class MessageInstanceResponse extends RestResponse
 													  ),
 									 );
 				
-				$messageJSON['AvailableOwners'] = null;
+				$messageJSON['Assignees'] = null;
 				foreach($this->AvailableOwners as $owner)
 				{
-					$messageJSON['AvailableOwners'][] = array(
-															'FirstName' => $owner->first_name,
-															'LastName' => $owner->last_name,
-															'Email' => $owner->email,
-															'Sid' => $owner->id,
-															);
+					$messageJSON['Assignees'][] = array(
+														'FirstName' => $owner->first_name,
+														'LastName' => $owner->last_name,
+														'Email' => $owner->email,
+														'Sid' => $owner->id,
+														);
 				}
 
+				if($this->WithAnnotations)
+				{
+					foreach($this->Annotations as $annotation)
+					{
+						$messageJSON['Annotations'][] = array(
+															   'Sid' => $annotation->id,
+															   'ActionSid' => $annotation->action_id,
+															   'Type' => $annotation->annotation_type,
+															   'UserSid' => $annotation->user_id,
+															   'FirstName' => $annotation->first_name,
+															   'LastName' => $annotation->last_name,
+															   'Email' => $annotation->email,
+															   'Description' => $annotation->description,
+															   'Created' => utc_time_rfc2822($annotation->created),
+															   );
+					}
+				}
+				
+				$messageJSON['TotalAnnotations'] = $this->TotalAnnotations;
+				$messageJSON['Version'] = $version;
 				return json_encode($messageJSON);
 			case 'xml':
 				$xml = new SimpleXMLElement('<Response />');
@@ -93,10 +111,10 @@ class MessageInstanceResponse extends RestResponse
 				$ownerXml->addChild('UserSid', $message->owner_type == 'user'? $message->owner_id : null);
 				$ownerXml->addChild('GroupSid', $message->owner_type == 'group'? $message->owner_id : null);
 				
-				$availOwnersXml = $messageXml->addChild('AvailableOwners');
+				$availOwnersXml = $messageXml->addChild('Assignees');
 				foreach($this->AvailableOwners as $owner)
 				{
-					$ownerXml = $availOwnersXml->addChild('AvailableOwner');
+					$ownerXml = $availOwnersXml->addChild('Assignee');
 					$ownerXml->addChild('FirstName', $owner->first_name);
 					$ownerXml->addChild('LastName', $owner->last_name);
 					$ownerXml->addChild('Email', $owner->email);

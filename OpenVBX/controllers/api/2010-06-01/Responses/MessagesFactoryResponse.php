@@ -41,14 +41,13 @@ class MessagesFactoryResponse extends RestResponse
 				if(!is_object($this->response))
 					throw new Exception('Response data not an object');
 
-				$this->response->Version = $version;
-				
 				$messagesJSON = new stdClass();
 				$messagesJSON->Messages = array();
 				$messagesJSON->Total = $this->Total;
 				$messagesJSON->Offset = $this->Offset;
 				$messagesJSON->Max = $this->Max;
-
+				$messagesJSON->Version = $version;
+				
 				foreach($this->Messages as $message)
 				{
 					$messagesJSON->Messages[] =

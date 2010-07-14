@@ -26,6 +26,9 @@ class LabelsInstanceResource extends RestResource
 	public function __construct($params)
 	{
 		parent::__construct();
+		$ci = &get_instance();
+		$ci->load->model('vbx_message');
+		
 		$this->LabelName = !empty($params['LabelName'])? $params['LabelName'] : null;
 		
 		if(!$this->LabelName)

@@ -26,6 +26,8 @@ class LabelsFactoryResource extends RestResource
 		$user = OpenVBX::getCurrentUser();
 		$groups = VBX_User::get_group_ids($user->id);
 		$response = new LabelsFactoryResponse();
+		$ci = &get_instance();
+		$ci->load->model('vbx_message');
 		$folders = VBX_Message::get_folders($user->id, $groups);
 		foreach($folders as $folder)
 		{

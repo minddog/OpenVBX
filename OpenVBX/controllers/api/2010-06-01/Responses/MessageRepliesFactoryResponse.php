@@ -39,7 +39,6 @@ class MessageRepliesFactoryResponse extends RestResponse
 		switch($format)
 		{
 			case 'json':
-				$this->response->version = $version;
 				$repliesJSON = new stdClass();
 				$repliesJSON->Replies = array();
 				foreach($replies as $reply)
@@ -62,6 +61,7 @@ class MessageRepliesFactoryResponse extends RestResponse
 				$repliesJSON->Total = $this->Total;
 				$repliesJSON->Max = $this->Max;
 				$repliesJSON->Offset = $this->Offset;
+				$repliesJSON->Version = $version;
 				
 				return json_encode($repliesJSON);
 			case 'xml':

@@ -19,36 +19,32 @@
  * Contributor(s):
  **/
 
-class MessagesInstanceResource extends RestResource
+class ThemeInstanceResource extends RestResource
 {
 	private $Sid;
+	private $ThemeName;
 	
 	public function __construct($params)
 	{
 		parent::__construct();
-		$this->Sid = !empty($params['Sid'])? $params['Sid'] : null;
+		$ci = &get_instance();
+		$ci->load->model('vbx_theme');
+		$theme = $ci->settings->get('theme', $ci->tenant->id);
+		$theme = empty($theme)? 'default' : $theme;
 		
-		if(!$this->Sid)
-			throw new RestException('Missing Message Sid');
+		$this->ThemeName = !empty($params['ThemeName'])? $params['ThemeName'] : $theme;
+		
+		if(!$this->ThemeName)
+			throw new Exception('Missing ThemeName');
 	}
 	
 	public function get()
 	{
-		$ci = &get_instance();
-		$ci->load->model('vbx_message');
-		$message = $ci->vbx_message->get_message($this->Sid);
-		$response = new MessageInstanceResponse();
-		$response->Sid = $this->Sid;
-		$response->Message = $message;
-		$response->AvailableOwners = $ci->vbx_user->get_active_users();
-		$response->WithAnnotations = $ci->input->get('with_annotations');
-		$annotations = array();
-		$annotations = $ci->vbx_message->get_message_annotations($this->Sid);
-		$total = count($annotations);
-		$annotations = array_slice($annotations, 0, 10);
+		$user = OpenVBX::getCurrentUser();
 
-		$response->Annotations = $annotations;
-		$response->TotalAnnotations = $total;
+		$response = new ThemeInstanceResponse();
+		$response->ThemeName = $this->ThemeName;
+		$response->Configuration = VBX_Theme::get_iphone_json($this->ThemeName);
 		return $response;
 	}
 
