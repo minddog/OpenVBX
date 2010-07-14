@@ -1,0 +1,1 @@
+# OpenVBX Rest API Response Format #

@@ -1,48 +1,14 @@
-# Inbox Resource #
-The _Inbox_ resource represents an overview of an OpenVBX user's inbox, describing the number of messages by status and label.
+# Label Resource #
+The _Label_ resource represents an overview of an OpenVBX user's inbox.
 
 ## Base Resource URI ##
-### /2010-06-01/Inbox ###
-
-## Resource Properties ##
-An <Inbox> resource is represented by the following properties:
-
-<table class="parameters">
-<thead>
-    <tr>
-        <th class="col-1">Property</th>
-        <th class="col-2">Description</th>
-    </tr>
-</thead>
-<tbody>
-    <tr>
-        <td>Total</td>
-        <td>Total number of messages in the user's inbox</td>
-    </tr>
-	<tr>
-		<td>Read</td>
-		<td>Number of read messages in the user's inbox</td>
-	</tr>
-	<tr>
-		<td>New</td>
-		<td>Number of new messages in the user's inbox</td>
-	</tr>
-	<tr>
-		<td>Archived</td>
-		<td>Number of archived messages in the user's inbox</td>
-	</tr>
-	<tr>
-		<td>Labels</td>
-		<td>A list of Label resources representing a grouping of messages</td>
-	</tr>
-</tbody>
-</table>
+### /2010-06-01/Labels ###
 
 # Label Resource #
-The <Label> resource represents an overview of a specific set of messages.  It is similar to its parent <Inbox> resource in regards to counts of different message statuses.
+The Label resource represents an overview of a specific set of messages. 
 
 ## Resource Properties ##
-A <Label> resource is represented by the following properties:
+A Label resource is represented by the following properties:
 
 <table class="parameters">
 <thead>
@@ -75,22 +41,22 @@ A <Label> resource is represented by the following properties:
 </tbody>
 </table>
 
-# Inbox Factory Resource #
-HTTP Methods
+# Labels List Resource #
+This resource manages a list of labels that exist for a user's account.  This is the same list that appears in the navigation menu of OpenVBX Web Interface under Messages.
 
-## GET ##
-Returns an overview of the OpenVBX user's inbox and labels.  Represented by <Inbox> and <Label> resources.
+    /2010-06-01/Labels
 
-GET /api/2010-06-01/Inbox.json HTTP/1.1
+## HTTP Methods ##
+
+### GET ###
+Returns an overview of the OpenVBX user's inbox and labels.  
+
+GET /api/2010-06-01/Labels HTTP/1.1
 
     {
-    	"Total": 3,
-    	"Archived": 0,
-    	"New": 2,
-    	"Read": 1,
     	"Labels": [
     		{
-    			"Name": "Inbox",
+    			"Name": "Label",
     			"Sid": 0,
     			"Archived": 0,
     			"Type": "inbox",
@@ -120,12 +86,12 @@ GET /api/2010-06-01/Inbox.json HTTP/1.1
     	"Version": "2010-06-01"
     }
     
-GET /api/2010-06-01/Inbox.xml HTTP/1.1
+GET /api/2010-06-01/Labels.xml HTTP/1.1
 
     <Response version="2010-06-01">
-    	<Inbox>
+    	<Labels>
     		<Label>
-    			<Name>Inbox</Name>
+    			<Name>Label</Name>
     			<Archived>0</Archived>
     			<Total>3</Total>
     			<Read>1</Read>
@@ -151,21 +117,70 @@ GET /api/2010-06-01/Inbox.xml HTTP/1.1
     			<Sid>2</Sid>
 				<Type>group</Type>
     		</Label>
-    		<Total>3</Total>
-    		<Read>1</Read>
-    		<New>2</New>
-    		<Archived>0</Archived>
-    	</Inbox>
+    	</Labels>
     </Response> 
     
-## POST ##
+### POST ###
 Not Implemented
 
-## PUT ##
+### PUT ###
 Not Implemented
 
-## DELETE ##
+### DELETE ###
 Not Implemented
 
+# Label Instance Resource #
+This resource represents a specific instance of a label.  
 
-Inbox Label Instance
+    /2010-06-01/Labels/{LabelName}
+
+## HTTP Methods ##
+
+### GET ###
+Returns an instance of a Label
+
+GET /api/2010-06-01/Labels/{LabelName} HTTP/1.1
+
+    {
+    	"Name": "Sales",
+    	"Sid": "1",
+    	"Archived": 0,
+    	"Type": "group",
+    	"New": "1",
+    	"Read": 0,
+    	"Total": "1",
+    	"Version": "2010-06-01"
+    } 
+	
+GET http://apps.localhost.twilio.com/api/2010-06-01/Labels/Sales.xml
+
+    <?xml version="1.0"?>
+    <Response version="2010-06-01">
+    	<Label>
+    		<Name>Sales</Name>
+    		<Archived>0</Archived>
+    		<Total>1</Total>
+    		<Read>0</Read>
+    		<New>1</New>
+    		<Sid>1</Sid>
+    		<Type>group</Type>
+    	</Label>
+    </Response>
+    
+
+### POST ###
+Not Implemented
+
+### PUT ###
+Not Implemented
+
+### DELETE ###
+Not Implemented
+
+# Label Instance Sub Resources #
+
+# Messages #
+
+http://apps.localhost.twilio.com/api/2010-06-01/Labels/Sales/Messages
+
+Returns a list of messages that are under that label name. See the [Messages](Messages) section for the response format.
