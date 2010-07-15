@@ -206,7 +206,6 @@ You may limit the list by providing certain query string parameters to the listi
 		 Between "hello" and "goodbye"
 		 
 		 http://openvbx.local/api/2010-06-01/Messages?body=hello*goodbye
-
 * archived - set to 1 to get only archived messages, by default archived messages are not returned in standard requests.
 * from - find messages by specific caller or sender phone number
 * to - find messages by specific number in openvbx
