@@ -32,12 +32,15 @@ class ApiVersionFactoryResource extends RestResource
 		$supportedVersions = array(
 								   '2010-06-01',
 								   );
-		
+
+		$ci = &get_instance();
+		$requireTrustedCert = $ci->settings->get('requireTrustedCertificate', $ci->tenant->id);
+
 		$response = new ApiVersionFactoryResponse();
 		
 		$response->Versions = $supportedVersions;
 		$response->ClientConfiguration = new stdClass();
-		$response->ClientConfiguration->RequireTrustedCertificate = true;
+		$response->ClientConfiguration->RequireTrustedCertificate = !strlen($requireTrustedCert)? false : $requireTrustedCert;
 		
 		return $response;
 	}

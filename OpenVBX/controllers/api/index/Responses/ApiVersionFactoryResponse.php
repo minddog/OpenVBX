@@ -41,7 +41,7 @@ class ApiVersionFactoryResponse extends RestResponse
 				$xml = new SimpleXMLElement('<Response />');
 				$versionsXml = $xml->addChild('Versions');
 				$configurationXml = $xml->addChild('ClientConfiguration');
-				$configurationXml->addChild('RequireTrustedCertificate', ($this->Configuration->RequireTrustedCertificate)? 'true' : 'false');
+				$configurationXml->addChild('RequireTrustedCertificate', ($this->ClientConfiguration->RequireTrustedCertificate)? 'true' : 'false');
 				
 				foreach($this->Versions as $version)
 				{
