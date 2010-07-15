@@ -262,43 +262,43 @@ GET /api/2008-06-01/Messages/1 HTTP/1.1
     
 GET /api/2008-06-01/Messages/1.xml HTTP/1.1
 
-<?xml version="1.0"?>
-<Response version="2010-06-01">
-  <Message>
-    <Sid>1</Sid>
-    <From>(480) 334-2609</From>
-    <To>(352) 364-4032</To>
-    <Body>Hey ... can you give me a ring back, very important</Body>
-    <TimeReceived>Thu, 24 Jun 2010 19:23:08 +0000</TimeReceived>
-    <LastUpdated>Thu, 24 Jun 2010 19:23:08 +0000</LastUpdated>
-    <RecordingUrl>http://myexamplerecording.com/hello.mp3</RecordingUrl>
-    <RecordingLength>00:58</RecordingLength>
-    <Type>voice</Type>
-    <TicketStatus>open</TicketStatus>
-    <Status>read</Status>
-    <Archived>false</Archived>
-    <Unread>false</Unread>
-    <Owner>
-      <UserSid>1</UserSid>
-      <GroupSid/>
-    </Owner>
-    <Assignees>
-      <Assignee>
-        <FirstName>Terry</FirstName>
-        <LastName>Tornado</LastName>
-        <Email>terry@tornado.com</Email>
+    <?xml version="1.0"?>
+    <Response version="2010-06-01">
+      <Message>
         <Sid>1</Sid>
-      </Assignee>
-      <Assignee>
-        <FirstName>Barry</FirstName>
-        <LastName>Goldwater</LastName>
-        <Email>barry@goldwater.com</Email>
-        <Sid>3</Sid>
-      </Assignee>
-    </Assignees>
-  </Message>
-</Response>
-
+        <From>(480) 334-2609</From>
+        <To>(352) 364-4032</To>
+        <Body>Hey ... can you give me a ring back, very important</Body>
+        <TimeReceived>Thu, 24 Jun 2010 19:23:08 +0000</TimeReceived>
+        <LastUpdated>Thu, 24 Jun 2010 19:23:08 +0000</LastUpdated>
+        <RecordingUrl>http://myexamplerecording.com/hello.mp3</RecordingUrl>
+        <RecordingLength>00:58</RecordingLength>
+        <Type>voice</Type>
+        <TicketStatus>open</TicketStatus>
+        <Status>read</Status>
+        <Archived>false</Archived>
+        <Unread>false</Unread>
+        <Owner>
+          <UserSid>1</UserSid>
+          <GroupSid/>
+        </Owner>
+        <Assignees>
+          <Assignee>
+            <FirstName>Terry</FirstName>
+            <LastName>Tornado</LastName>
+            <Email>terry@tornado.com</Email>
+            <Sid>1</Sid>
+          </Assignee>
+          <Assignee>
+            <FirstName>Barry</FirstName>
+            <LastName>Goldwater</LastName>
+            <Email>barry@goldwater.com</Email>
+            <Sid>3</Sid>
+          </Assignee>
+        </Assignees>
+      </Message>
+    </Response>
+    
 ### POST ###
 Update a limited number of properties on a message.
 
