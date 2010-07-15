@@ -1,4 +1,5 @@
 # Message Replies #
+With the Message Replies Resource, you can see communication activity between the sender of messages, respond to the sender with a phone call, or even reply with an sms message.
 
 ## Base Resource URI ##
 ### /2010-06-01/Messages/{MessageSid}/Replies ###
@@ -233,6 +234,8 @@ GET /api/2010-06-01/Messages/{MessageSid}/Replies/SmsMessages.xml HTTP/1.1
     
 
 ### POST ###
+
+
 
 ### PUT ###
 
