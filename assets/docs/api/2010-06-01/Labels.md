@@ -1,4 +1,4 @@
-# Label Resource #
+# Label #
 The _Label_ resource represents an overview of an OpenVBX user's inbox.
 
 ## Base Resource URI ##
