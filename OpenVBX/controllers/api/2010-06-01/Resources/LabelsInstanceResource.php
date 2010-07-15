@@ -32,7 +32,7 @@ class LabelsInstanceResource extends RestResource
 		$this->LabelName = !empty($params['LabelName'])? $params['LabelName'] : null;
 		
 		if(!$this->LabelName)
-			throw new Exception('Missing LabelName');
+			throw new Exception('Missing LabelName', 500);
 	}
 	
 	public function get()
@@ -44,13 +44,13 @@ class LabelsInstanceResource extends RestResource
 		{
 			$group = VBX_Group::get(array('name' => $this->LabelName));
 			if(!$group)
-				throw new Exception('No label found by the name: '.$this->LabelName);
+				throw new Exception('No label found by the name: '.$this->LabelName, 404);
 			
 			$groups = array($group->id);
 			$folders = VBX_Message::get_folders($user->id, $groups);
 			
 			if(!isset($folders[$group->id]))
-				throw new Exception('No label found by the name: '.$this->LabelName);
+				throw new Exception('No label found by the name: '.$this->LabelName, 404);
 			$folder = $folders[$group->id];
 			
 		}
