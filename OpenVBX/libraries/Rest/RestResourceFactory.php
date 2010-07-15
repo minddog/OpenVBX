@@ -41,7 +41,7 @@ class RestResourceFactory
 					$items = !empty($items)? $items[0] : array();
 					foreach($items as $key)
 					{
-						$params[$key] = $matches[$key];
+						$params[$key] = urldecode($matches[$key]);
 					}
 				}
 				
