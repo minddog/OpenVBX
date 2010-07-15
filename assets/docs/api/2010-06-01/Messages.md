@@ -309,3 +309,17 @@ Not Implemented
 
 ### DELETE ###
 Not Implemented
+
+# Message Instance Sub Resources #
+
+# Annotations #
+
+http://apps.localhost.twilio.com/api/2010-06-01/Messages/{MessageSid}/Annotations
+
+Returns a list of annotations that belong to the Message Resource.  See the [Message Annotations](MessageAnnotations) section for the response format.
+
+# Replies #
+
+http://apps.localhost.twilio.com/api/2010-06-01/Messages/{MessageSid}/Replies
+
+Returns a list of replies that belong to the Message Resource.  See the [Message Replies](MessageReplies) section for the response format.
