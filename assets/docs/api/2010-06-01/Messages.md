@@ -94,17 +94,18 @@ A Message Instance resource is represented by the following properties:
 ## HTTP Methods ##
 
 ### GET ###
+
 GET /api/2008-06-01/Messages HTTP/1.1
 
     {
     	"Messages": [
     		{
     			"Sid": "4",
-    			"From": "(480) 334-2609",
-    			"To": "(480) 334-2609",
+    			"From": "(555) 334-2609",
+    			"To": "(555) 334-2609",
     			"Body": "hello",
-    			"RecordingUrl": "",
-    			"RecordingLength": null,
+    			"RecordingUrl": "http://myexamplerecording.com/hello.mp3",
+    			"RecordingLength": "00:51",
     			"Type": "voice",
     			"TicketStatus": "open",
     			"Status": "read",
@@ -116,12 +117,12 @@ GET /api/2008-06-01/Messages HTTP/1.1
     		},
     		{
     			"Sid": "2",
-    			"From": "(480) 334-2609",
+    			"From": "(555) 334-2609",
     			"To": "(352) 364-4032",
     			"Body": "Still waiting to hear from you, thanks",
     			"RecordingUrl": "",
     			"RecordingLength": null,
-    			"Type": "voice",
+    			"Type": "sms",
     			"TicketStatus": "open",
     			"Status": "read",
     			"Assigned": null,
@@ -131,11 +132,50 @@ GET /api/2008-06-01/Messages HTTP/1.1
     			"LastUpdated": "Thu, 24 Jun 2010 19:23:09 +0000"
     		}
     	}],
-    	"Total": "4",
+    	"Total": "2",
     	"Offset": 0,
     	"Max": 10,
     	"Version": "2010-06-01"
     }
+
+GET /api/2008-06-01/Messages.json HTTP/1.1
+
+    <?xml version="1.0"?>
+    <Response version="2010-06-01">
+      <Messages total="2" offset="0" max="10">
+        <Message>
+          <Sid>4</Sid>
+          <From>(555) 867-5309</From>
+          <To>(555) 867-5309</To>
+          <Body>hello</Body>
+          <TimeReceived>Mon, 12 Jul 2010 22:40:39 +0000</TimeReceived>
+          <LastUpdated>Wed, 14 Jul 2010 23:10:18 +0000</LastUpdated>
+          <RecordingUrl>http://myexamplerecording.com/hello.mp3</RecordingUrl>
+          <RecordingLength>00:58</RecordingLength>
+          <Type>voice</Type>
+          <TicketStatus>open</TicketStatus>
+          <Status>read</Status>
+          <Archived>false</Archived>
+          <Unread>false</Unread>
+        </Message>
+        <Message>
+          <Sid>2</Sid>
+          <From>(555) 867-5309</From>
+          <To>(555) 364-4032</To>
+          <Body>Still waiting to hear from you, thanks</Body>
+          <TimeReceived>Thu, 24 Jun 2010 19:23:09 +0000</TimeReceived>
+          <LastUpdated>Thu, 24 Jun 2010 19:23:09 +0000</LastUpdated>
+          <RecordingUrl/>
+          <RecordingLength/>
+          <Type>sms</Type>
+          <TicketStatus>open</TicketStatus>
+          <Status>read</Status>
+          <Archived>false</Archived>
+          <Unread>false</Unread>
+        </Message>
+      </Messages>
+    </Response>
+    																																																																																							
     
 ### POST ###
 Not Implemented
