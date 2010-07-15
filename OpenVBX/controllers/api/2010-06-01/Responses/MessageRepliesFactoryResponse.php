@@ -48,16 +48,16 @@ class MessageRepliesFactoryResponse extends RestResponse
 							  'Sid' => $reply->id,
 							  'SmsMessageSid' => $reply->annotation_type == 'sms'? $reply->action_id : null,
 							  'CallSid' => $reply->annotation_type == 'called'? $reply->action_id : null,
-							  'ActionSid' => $reply->action_id,
 							  'Type' => $reply->annotation_type,
 							  'UserSid' => $reply->user_id,
 							  'FirstName' => $reply->first_name,
 							  'LastName' => $reply->last_name,
 							  'Description' => $reply->description,
+							  'MessageSid' => $this->MessageSid,
 							  'Created' => utc_time_rfc2822($reply->created),
 							  );
 				}
-				$repliesJSON->MessageSid = $this->MessageSid;
+				
 				$repliesJSON->Total = $this->Total;
 				$repliesJSON->Max = $this->Max;
 				$repliesJSON->Offset = $this->Offset;
@@ -81,10 +81,10 @@ class MessageRepliesFactoryResponse extends RestResponse
 					$replyXml->addChild('FirstName', $reply->first_name);
 					$replyXml->addChild('LastName' , $reply->last_name);
 					$replyXml->addChild('Description' , $reply->description);
+					$replyXml->addChild('MessageSid', $this->MessageSid);
 					$replyXml->addChild('Created' , utc_time_rfc2822($reply->created));
 				}
 
-				$xml->addChild('MessageSid', $this->MessageSid);
 				$repliesXml->addAttribute('total', $this->Total);
 				$repliesXml->addAttribute('max', $this->Max);
 				$repliesXml->addAttribute('offset', $this->Offset);

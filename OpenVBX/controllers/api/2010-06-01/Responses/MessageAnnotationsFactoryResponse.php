@@ -46,16 +46,17 @@ class MessageAnnotationsFactoryResponse extends RestResponse
 					$annotationsJSON->Annotations[] =
 						array(
 							  'Sid' => $annotation->id,
-							  'ActionSid' => $annotation->action_id,
+							  'SmsMessageSid' => $annotation->annotation_type == 'sms'? $annotation->action_id : null,
+							  'CallSid' => $annotation->annotation_type == 'called'? $annotation->action_id : null,
 							  'Type' => $annotation->annotation_type,
 							  'UserSid' => $annotation->user_id,
 							  'FirstName' => $annotation->first_name,
 							  'LastName' => $annotation->last_name,
 							  'Description' => $annotation->description,
 							  'Created' => utc_time_rfc2822($annotation->created),
+							  'MessageSid' => $this->MessageSid,
 							  );
 				}
-				$annotationsJSON->MessageSid = $this->MessageSid;
 				$annotationsJSON->Total = $this->Total;
 				$annotationsJSON->Max = $this->Max;
 				$annotationsJSON->Offset = $this->Offset;
@@ -71,16 +72,17 @@ class MessageAnnotationsFactoryResponse extends RestResponse
 				{
 					$annotationXml = $annotationsXml->addChild('Annotation');
 					$annotationXml->addChild('Sid', $annotation->id);
-					$annotationXml->addChild('ActionSid', $annotation->action_id);
+					$annotationXml->addChild('SmsMessageSid', $annotation->annotation_type == 'sms'? $annotation->action_id : null);
+					$annotationXml->addChild('CallSid', $annotation->annotation_type == 'called'? $annotation->action_id : null);
 					$annotationXml->addChild('Type', $annotation->annotation_type);
 					$annotationXml->addChild('UserSid', $annotation->user_id);
 					$annotationXml->addChild('FirstName', $annotation->first_name);
 					$annotationXml->addChild('LastName' , $annotation->last_name);
 					$annotationXml->addChild('Description' , $annotation->description);
 					$annotationXml->addChild('Created' , utc_time_rfc2822($annotation->created));
+					$annotationXml->addChild('MessageSid', $this->MessageSid);
 				}
 
-				$xml->addChild('MessageSid', $this->MessageSid);
 				$annotationsXml->addAttribute('total', $this->Total);
 				$annotationsXml->addAttribute('max', $this->Max);
 				$annotationsXml->addAttribute('offset', $this->Offset);
