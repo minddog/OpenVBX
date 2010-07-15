@@ -212,3 +212,101 @@ You may limit the list by providing certain query string parameters to the listi
 * to - find messages by specific number in openvbx
 * ticket_status - retrieve list of messages by a comma seperated list of ticket statuses, ie: _ticket_status=open,pending_
 
+# Message Instance Resource #
+
+    /2010-06-01/Messages/{MessageSid}
+
+## HTTP Methods ##
+
+### GET ###
+Retrieves full details on a message resource.
+
+GET /api/2008-06-01/Messages/1 HTTP/1.1
+
+    {
+    	"Sid": "1",
+    	"From": "(555) 768-5309",
+    	"To": "(555) 364-4032",
+    	"Body": "Hey ... can you give me a ring back, very important",
+    	"RecordingUrl": "http://myexamplerecording.com/hello.mp3",
+    	"RecordingLength": "00:58",
+    	"Type": "voice",
+    	"TicketStatus": "open",
+    	"Status": "read",
+    	"Assigned": null,
+    	"Archived": false,
+    	"Unread": false,
+    	"TimeReceived": "Thu, 24 Jun 2010 19:23:08 +0000",
+    	"LastUpdated": "Thu, 24 Jun 2010 19:23:08 +0000",
+    	"Owner": {
+    		"UserSid": "1",
+    		"GroupSid": null
+    	},
+    	"Assignees": [
+    		{
+    			"FirstName": "Terry",
+    			"LastName": "Tornado",
+    			"Email": "terry@tornado.com",
+    			"Sid": "1"
+    		},
+    		{
+    			"FirstName": "Barry",
+    			"LastName": "Goldwater",
+    			"Email": "barry@goldwater.com",
+    			"Sid": "3"
+    		}
+    	],
+    	"TotalAnnotations": 0,
+    	"Version": "2010-06-01"
+    }
+    
+GET /api/2008-06-01/Messages/1.xml HTTP/1.1
+
+<?xml version="1.0"?>
+<Response version="2010-06-01">
+  <Message>
+    <Sid>1</Sid>
+    <From>(480) 334-2609</From>
+    <To>(352) 364-4032</To>
+    <Body>Hey ... can you give me a ring back, very important</Body>
+    <TimeReceived>Thu, 24 Jun 2010 19:23:08 +0000</TimeReceived>
+    <LastUpdated>Thu, 24 Jun 2010 19:23:08 +0000</LastUpdated>
+    <RecordingUrl>http://myexamplerecording.com/hello.mp3</RecordingUrl>
+    <RecordingLength>00:58</RecordingLength>
+    <Type>voice</Type>
+    <TicketStatus>open</TicketStatus>
+    <Status>read</Status>
+    <Archived>false</Archived>
+    <Unread>false</Unread>
+    <Owner>
+      <UserSid>1</UserSid>
+      <GroupSid/>
+    </Owner>
+    <Assignees>
+      <Assignee>
+        <FirstName>Terry</FirstName>
+        <LastName>Tornado</LastName>
+        <Email>terry@tornado.com</Email>
+        <Sid>1</Sid>
+      </Assignee>
+      <Assignee>
+        <FirstName>Barry</FirstName>
+        <LastName>Goldwater</LastName>
+        <Email>barry@goldwater.com</Email>
+        <Sid>3</Sid>
+      </Assignee>
+    </Assignees>
+  </Message>
+</Response>
+
+### POST ###
+Update a limited number of properties on a message.
+
+Parameters to POST
+... TBD ...
+
+### PUT ###
+Not Implemented
+
+### DELETE ###
+Not Implemented
