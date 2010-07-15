@@ -21,18 +21,18 @@ We strived to build a very RESTy interface, so that developers can make accurate
 
 
 ## Overview ##
-* [Request Formats](Request)
-* [Response Formats](Response)
+* [Request Formats](Request.md)
+* [Response Formats](Response.md)
 
 ## Rest API Reference ##
 ### Resources supported in version _2010-06-01_ of the REST API ###
-* [Labels](Labels)
-* [Messages](Messages)
- * [Message Annotations](MessageAnnotations)
- * [Message Replies](MessageReplies)
-* [Numbers](Numbers)
-* [Calls](Calls)
-* [SmsMessages](SmsMessages)
+* [Labels](Labels.md)
+* [Messages](Messages.md)
+ * [Message Annotations](MessageAnnotations.md)
+ * [Message Replies](MessageReplies.md)
+* [Numbers](Numbers.md)
+* [Calls](Calls.md)
+* [SmsMessages](SmsMessages.md)
 
 ### Resources outside of OpenVBX API version scheme ###
-* [API Versions](Api) 
+* [API Versions](Api.md) 

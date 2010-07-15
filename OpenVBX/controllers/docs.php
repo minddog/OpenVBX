@@ -45,7 +45,10 @@ class Docs extends User_Controller {
 			$page .= 'index';
 		
 		$this->load->helper('markdown');
-		$file = APPPATH . '/../assets/docs/'.$page.'.md';
+		if(!preg_match('/\.md$/', $page))
+			$page .= '.md';
+		
+		$file = APPPATH . '/../assets/docs/'.$page;
 		if(!file_exists($file))
 			return show_404();
 		
