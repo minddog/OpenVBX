@@ -185,6 +185,7 @@ class MessagesRepliesFactoryResource extends RestResource
 		$rest_access = $ci->vbx_rest_access->make_key($ci->session->userdata('user_id'));
 
 		$ci->load->model('vbx_call');
+		$ci->load->model('vbx_message');
 		$call = $ci->vbx_call->make_call($from, $to, $callerid, $rest_access);
 		
 		$annotationSid = $ci->vbx_message->annotate($this->MessageSid,
@@ -194,14 +195,14 @@ class MessagesRepliesFactoryResource extends RestResource
 										  $call->Sid);
 
 		$response = new CallInstanceResponse();
-		$response->Sid = $call->Sid;
+		$response->Sid = (String)$call->Sid;
 		$response->ReplySid = $annotationSid;
 		$response->MessageSid = $this->MessageSid;
 		
-		$response->StartTime = $call->StartTime;
-		$response->EndTime = $call->EndTime;
-		$response->Price = $call->Price;
-		$response->Status = $call->Status;
+		$response->StartTime = (String)$call->StartTime;
+		$response->EndTime = (String)$call->EndTime;
+		$response->Price = (String)$call->Price;
+		$response->Status = (String)$call->Status;
 		$response->From = $from;
 		$response->To = $to;
 		$response->CallerId = $callerid;

@@ -71,13 +71,12 @@ class CallsFactoryResource extends RestResource
 
 		$ci->load->model('vbx_call');
 		$call = $ci->vbx_call->make_call($from, $to, $callerid, $rest_access);
-		
 		$response = new CallInstanceResponse();
-		$response->Sid = $call->Sid;
-		$response->StartTime = $call->StartTime;
-		$response->EndTime = $call->EndTime;
-		$response->Price = $call->Price;
-		$response->Status = $call->Status;
+		$response->Sid = (String)$call->Sid;
+		$response->StartTime = (String)$call->StartTime;
+		$response->EndTime = (String)$call->EndTime;
+		$response->Price = (String)$call->Price;
+		$response->Status = (String)$call->Status;
 		$response->From = $from;
 		$response->To = $to;
 		$response->CallerId = $callerid;
