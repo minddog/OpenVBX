@@ -55,11 +55,11 @@ class CallsFactoryResponse extends RestResponse
 							  'MessageSid' => $call->MessageSid,
 							  'From' => format_phone($call->Caller),
 							  'To' => format_phone($call->Called),
-							  'Status' => $call->Status,
-							  'StartTime' => utc_time_rfc2822($call->StartTime),
-							  'EndTime' => utc_time_rfc2822($call->EndTime),
-							  'Price' => $call->Price,
-							  'Flags' => $call->Flags,
+							  'Status' => (string)$call->Status,
+							  'StartTime' => (string)$call->StartTime,
+							  'EndTime' => utc_time_rfc2822((string)$call->EndTime),
+							  'Price' => (string)$call->Price,
+							  'Flags' => (string)$call->Flags,
 							  );
 				}
 				return json_encode($callsJSON);
