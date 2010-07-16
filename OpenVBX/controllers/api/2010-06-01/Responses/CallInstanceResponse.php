@@ -51,11 +51,8 @@ class CallInstanceResponse extends RestResponse
 						   'MessageSid' => $this->MessageSid,
 						   'From' => format_phone($this->To),
 						   'To' => format_phone($this->From),
-						   'Status' => $this->Status,
 						   'StartTime' => $this->StartTime,
 						   'EndTime' => $this->EndTime,
-						   'Price' => $this->Price,
-						   'Flags' => $this->Flags,
 						   );
 
 				return json_encode($callJSON);
@@ -70,11 +67,8 @@ class CallInstanceResponse extends RestResponse
 				$callXml->addChild('MessageSid', $this->MessageSid);
 				$callXml->addChild('From', format_phone($this->To));
 				$callXml->addChild('To', format_phone($this->From));
-				$callXml->addChild('Status', $this->Status);
 				$callXml->addChild('StartTime', utc_time_rfc2822($this->StartTime));
 				$callXml->addChild('EndTime', utc_time_rfc2822($this->EndTime));
-				$callXml->addChild('Price', $this->Price);
-				$callXml->addChild('Flags', $this->Flags);
 				
 				return $xml->asXML();
 				

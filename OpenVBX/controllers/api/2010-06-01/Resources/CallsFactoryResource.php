@@ -59,9 +59,26 @@ class CallsFactoryResource extends RestResource
 		{
 			$ci->load->model('vbx_device');
 			$devices = $ci->vbx_device->get_by_user($user->id);
-			if(!empty($devices[0]))
+			
+			/* Find first active device */
+			foreach($devices as $device)
 			{
 				$from = $devices[0]->value;
+				if($device->is_active)
+					break;
+			}
+		}
+
+		if(empty($callerid))
+		{
+			$ci->load->model('vbx_incoming_numbers');
+			$numbers = VBX_Incoming_Numbers::search(array());
+			foreach($numbers->Numbers as $number)
+			{
+				/* Pop the first number */
+				/* TODO: Add preferred dialing number settings here */
+				$callerid =  normalize_phone_to_E164($number->phone);
+				break;
 			}
 		}
 

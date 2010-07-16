@@ -55,11 +55,8 @@ class CallsFactoryResponse extends RestResponse
 							  'MessageSid' => $call->MessageSid,
 							  'From' => format_phone($call->Caller),
 							  'To' => format_phone($call->Called),
-							  'Status' => $call->Status,
 							  'StartTime' => utc_time_rfc2822($call->StartTime),
 							  'EndTime' => utc_time_rfc2822($call->EndTime),
-							  'Price' => $call->Price,
-							  'Flags' => $call->Flags,
 							  );
 				}
 				return json_encode($callsJSON);
@@ -75,11 +72,8 @@ class CallsFactoryResponse extends RestResponse
 					$callXml->addChild('MessageSid', $call->MessageSid);
 					$callXml->addChild('From', format_phone($call->To));
 					$callXml->addChild('To', format_phone($call->From));
-					$callXml->addChild('Status', $call->Status);
 					$callXml->addChild('StartTime', utc_time_rfc2822($call->StartTime));
 					$callXml->addChild('EndTime', utc_time_rfc2822($call->EndTime));
-					$callXml->addChild('Price', $call->Price);
-					$callXml->addChild('Flags', $call->Flags);
 				}
 
 				/* Call Factory Properties */

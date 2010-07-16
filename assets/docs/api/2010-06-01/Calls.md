@@ -18,6 +18,30 @@ A Call resource is represented by the following properties:
 		<td>Sid</td>
 		<td>A unique identifier for that call instance</td>
 	</tr>
+	<tr>
+		<td>MessageSid</td>
+		<td>A unique identifier for that call instance</td>
+	</tr>
+	<tr>
+		<td>ReplySid</td>
+		<td>A unique identifier for that call instance</td>
+	</tr>
+	<tr>
+		<td>From</td>
+		<td></td>
+	</tr>
+	<tr>
+		<td>To</td>
+		<td></td>
+	</tr>
+	<tr>
+		<td>StartTime</td>
+		<td></td>
+	</tr>
+	<tr>
+		<td>EndTime</td>
+		<td></td>
+	</tr>
 </tbody>
 </table>
 
