@@ -11,6 +11,10 @@
 -----------------------------
 Please see [INSTALL.markdown](https://github.com/twilio/OpenVBX/blob/master/INSTALL.markdown)
 
+# API Documentation
+-----------------------------
+Please see [API Docs](assets/docs/index.md)
+
 # Bug Reporting Guidelines
 -----------------------------
 Report issues to:
