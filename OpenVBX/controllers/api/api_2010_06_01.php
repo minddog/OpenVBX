@@ -44,6 +44,7 @@ class Api_2010_06_01 extends Rest_Controller
 												'Messages' => 'MessagesFactoryResource', /* list of all messages */
 
 												'Calls' => 'CallsFactoryResource', /* Make outbound calls and retrieve call logs */
+												'SmsMessages' => 'SmsMessagesFactoryResource', /* Make outbound calls and retrieve call logs */
 												
 												'Labels' => 'LabelsFactoryResource', /* list of all label resource instances */
 												'Labels/{LabelName}/Messages' => 'MessagesFactoryResource', /* list of messages in label resource */

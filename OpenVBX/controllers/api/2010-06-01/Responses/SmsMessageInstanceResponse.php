@@ -51,8 +51,6 @@ class SmsMessageInstanceResponse extends RestResponse
 						   'To' => format_phone($this->From),
 						   'Status' => $this->Status,
 						   'DateSent' => utc_time_rfc2822($this->DateSent),
-						   'Price' => $this->Price,
-						   'Flags' => $this->Flags,
 						   'Version' => $version,
 						   );
 
@@ -61,17 +59,15 @@ class SmsMessageInstanceResponse extends RestResponse
 				$xml = new SimpleXMLElement('<Response />');
 				$xml->addAttribute('version', $version);
 				
-				/* Call Instance Properties */
-				$callXml = $xml->addChild('SmsMessage');
-				$callXml->addChild('Sid', $this->Sid);
-				$callXml->addChild('ReplySid', $this->ReplySid);
-				$callXml->addChild('MessageSid', $this->MessageSid);
-				$callXml->addChild('From', format_phone($this->To));
-				$callXml->addChild('To', format_phone($this->From));
-				$callXml->addChild('Status', $this->Status);
-				$callXml->addChild('DateSent', utc_time_rfc2822($this->DateSent));
-				$callXml->addChild('Price', $this->Price);
-				$callXml->addChild('Flags', $this->Flags);
+				/* Message Instance Properties */
+				$messageXml = $xml->addChild('SmsMessage');
+				$messageXml->addChild('Sid', $this->Sid);
+				$messageXml->addChild('ReplySid', $this->ReplySid);
+				$messageXml->addChild('MessageSid', $this->MessageSid);
+				$messageXml->addChild('From', format_phone($this->To));
+				$messageXml->addChild('To', format_phone($this->From));
+				$messageXml->addChild('Status', $this->Status);
+				$messageXml->addChild('DateSent', utc_time_rfc2822($this->DateSent));
 				
 				return $xml->asXML();
 				
