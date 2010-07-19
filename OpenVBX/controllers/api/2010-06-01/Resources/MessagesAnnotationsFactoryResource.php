@@ -22,7 +22,12 @@
 class MessagesAnnotationsFactoryResource extends RestResource
 {
 	private $MessageSid;
-		
+
+	const TYPE_NOTE = 'noted';
+	const TYPE_CALL = 'called';
+	const TYPE_SMS = 'sms';
+	const TYPE_CHANGE = 'changed';
+	
 	public function __construct($params)
 	{
 		parent::__construct();
@@ -33,19 +38,45 @@ class MessagesAnnotationsFactoryResource extends RestResource
 		if(!$this->MessageSid)
 			throw new RestException('Missing Message Sid');
 	}
-	
 
+
+	public function getAnnotationType($type)
+	{
+		switch($type)
+		{
+			case self::TYPE_NOTE:
+				return "noted";
+			case self::TYPE_CALL:
+				return "called";
+			case self::TYPE_SMS:
+				return "sms";
+			case self::TYPE_CHANGE:
+				return "changed";
+			default:
+				throw new Exception("Invalid Annotation Type: $type", 500);
+		}
+	}
+	
 	public function get()
 	{
 		$ci = &get_instance();
 		$max = input_int($ci->input->get('max'), 10);
 		$offset = intval($ci->input->get('offset', 0));
+		$annotationType = $ci->input->get('Type');
 		$message = $ci->vbx_message->get_message($this->MessageSid);
 
 		if($message)
 		{
 			/* FIXME: no pagination support, we're using array_slice till we implement better domain objects */
-			$annotations = $ci->vbx_message->get_message_annotations($this->MessageSid);
+			if(!empty($annotationType))
+				$annotations = $ci->vbx_message->get_message_annotations($this->MessageSid,
+																		 array(
+																			   'annotation_types' => array($this->getAnnotationType($annotationType)),
+																			   )
+																		 );
+			else
+				$annotations = $ci->vbx_message->get_message_annotations($this->MessageSid);
+			
 			$total = count($annotations);
 			$annotations = array_slice($annotations, $offset, $max);
 		}
@@ -63,7 +94,7 @@ class MessagesAnnotationsFactoryResource extends RestResource
 	public function post()
 	{
 		$ci = &get_instance();
-		$type = $ci->input->post('type', 'notes');
+		$type = $ci->input->post('type', 'note');
 
 		$body = $ci->input->post('body', '');
 		
