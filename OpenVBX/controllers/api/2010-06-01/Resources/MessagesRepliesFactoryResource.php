@@ -103,21 +103,26 @@ class MessagesRepliesFactoryResource extends RestResource
 		$user = OpenVBX::getCurrentUser();
 		$response = new RestResponse();
 
-		$body = substr($ci->input->post('body'), 0, 160);
-		$to = preg_replace('/[^0-9]*/','', $ci->input->post('to'));
-		$from = $ci->input->post('from');
+		$body = substr($ci->input->post('Body'), 0, 160);
+		$to = preg_replace('/[^0-9]*/','', $ci->input->post('To'));
+		$from = $ci->input->post('From');
 		$numbers = array();
 		
 		if(empty($from))
 		{
 			try
 			{
-				$numbers = $ci->vbx_incoming_numbers->get_numbers();
-				if(empty($numbers))
+				$ci->load->model('vbx_incoming_numbers');
+				$numbers = VBX_Incoming_Numbers::search(array());
+				foreach($numbers->Numbers as $number)
 				{
-					throw new Exception("Twilio account has no SMS Enabled numbers");
+					/* Pop the first number */
+					/* TODO: Add preferred dialing number settings here */
+					$callerid =  normalize_phone_to_E164($number->phone);
+					break;
 				}
-				$from = $numbers[0]->phone;
+				
+				$from = $numbers->Numbers[0]->phone;
 			}
 			catch(VBX_IncomingNumberException $e)
 			{
@@ -138,7 +143,7 @@ class MessagesRepliesFactoryResource extends RestResource
 		/* Create a one time pass for Twilio's Rest Access */
 		$ci->load->model('vbx_rest_access');
 		$rest_access = $ci->vbx_rest_access->make_key($ci->session->userdata('user_id'));
-
+		$ci->load->model('vbx_message');
 		$ci->load->model('vbx_sms_message');
 		$sms = $ci->vbx_sms_message->send_message($from, $to, $body);
 		$annotationSid = $ci->vbx_message->annotate($this->MessageSid,
@@ -149,7 +154,7 @@ class MessagesRepliesFactoryResource extends RestResource
 													);
 		
 		$response = new SmsMessageInstanceResponse();
-		$response->Sid = $sms->Sid;
+		$response->Sid = (String)$sms->Sid;
 		$response->ReplySid = $annotationSid;
 		$response->MessageSid = $this->MessageSid;
 		$response->DateSent = $sms->DateSent;
@@ -166,10 +171,10 @@ class MessagesRepliesFactoryResource extends RestResource
 
 		$user = OpenVBX::getCurrentUser();
 		
-		$to = preg_replace('/[^0-9]*/','', $ci->input->post('to'));
-		$callerid = preg_replace('/[^0-9]*/','', $ci->input->post('callerid'));
-		$from = $ci->input->post('from');
-		
+		$to = normalize_phone_to_E164($ci->input->post('To'));
+		$callerid = normalize_phone_to_E164($ci->input->post('Callerid'));
+		$from = normalize_phone_to_E164($ci->input->post('From'));
+	
 		if(empty($from))
 		{
 			$ci->load->model('vbx_device');
@@ -177,6 +182,19 @@ class MessagesRepliesFactoryResource extends RestResource
 			if(!empty($devices[0]))
 			{
 				$from = $devices[0]->value;
+			}
+		}
+
+		if(empty($callerid))
+		{
+			$ci->load->model('vbx_incoming_numbers');
+			$numbers = VBX_Incoming_Numbers::search(array());
+			foreach($numbers->Numbers as $number)
+			{
+				/* Pop the first number */
+				/* TODO: Add preferred dialing number settings here */
+				$callerid =  normalize_phone_to_E164($number->phone);
+				break;
 			}
 		}
 

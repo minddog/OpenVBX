@@ -47,8 +47,8 @@ class SmsMessageInstanceResponse extends RestResponse
 						   'Sid' => $this->Sid,
 						   'ReplySid' => $this->ReplySid,
 						   'MessageSid' => $this->MessageSid,
-						   'From' => format_phone($this->To),
-						   'To' => format_phone($this->From),
+						   'From' => normalize_phone_to_E164($this->To),
+						   'To' => normalize_phone_to_E164($this->From),
 						   'Status' => $this->Status,
 						   'DateSent' => utc_time_rfc2822($this->DateSent),
 						   'Version' => $version,
@@ -64,8 +64,8 @@ class SmsMessageInstanceResponse extends RestResponse
 				$messageXml->addChild('Sid', $this->Sid);
 				$messageXml->addChild('ReplySid', $this->ReplySid);
 				$messageXml->addChild('MessageSid', $this->MessageSid);
-				$messageXml->addChild('From', format_phone($this->To));
-				$messageXml->addChild('To', format_phone($this->From));
+				$messageXml->addChild('From', normalize_phone_to_E164($this->To));
+				$messageXml->addChild('To', normalize_phone_to_E164($this->From));
 				$messageXml->addChild('Status', $this->Status);
 				$messageXml->addChild('DateSent', utc_time_rfc2822($this->DateSent));
 				

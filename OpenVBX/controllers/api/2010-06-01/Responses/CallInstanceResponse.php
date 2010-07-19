@@ -49,8 +49,8 @@ class CallInstanceResponse extends RestResponse
 						   'Sid' => $this->Sid,
 						   'ReplySid' => $this->ReplySid,
 						   'MessageSid' => $this->MessageSid,
-						   'From' => format_phone($this->To),
-						   'To' => format_phone($this->From),
+						   'From' => normalize_phone_to_E164($this->To),
+						   'To' => normalize_phone_to_E164($this->From),
 						   'StartTime' => $this->StartTime,
 						   'EndTime' => $this->EndTime,
 						   );
@@ -65,8 +65,8 @@ class CallInstanceResponse extends RestResponse
 				$callXml->addChild('Sid', $this->Sid);
 				$callXml->addChild('ReplySid', $this->ReplySid);
 				$callXml->addChild('MessageSid', $this->MessageSid);
-				$callXml->addChild('From', format_phone($this->To));
-				$callXml->addChild('To', format_phone($this->From));
+				$callXml->addChild('From', normalize_phone_to_E164($this->To));
+				$callXml->addChild('To', normalize_phone_to_E164($this->From));
 				$callXml->addChild('StartTime', utc_time_rfc2822($this->StartTime));
 				$callXml->addChild('EndTime', utc_time_rfc2822($this->EndTime));
 				
