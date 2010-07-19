@@ -113,7 +113,3 @@ Not Implemented
 ### DELETE ###
 Not Implemented
 
-## URL Filtering ##
-
-You may limit the list by providing certain query string parameters to the listing resource. Note, parameters are case-sensitive:
-
