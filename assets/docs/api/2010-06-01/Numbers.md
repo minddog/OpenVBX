@@ -24,8 +24,11 @@ A Number resource is represented by the following properties:
 ## HTTP Methods ##
 
 ### GET ###
+
 ### POST ###
+
 ### PUT ###
+
 ### DELETE ###
 
 ## URL Filtering ##

@@ -1,5 +1,5 @@
 # Message Replies #
-With the Message Replies Resource, you can see communication activity between the sender of messages, respond to the sender with a phone call, or even reply with an sms message.
+With the Message Replies Resource, you can see communication activity between the sender of messages, respond to the sender with a phone call, or reply with an sms message.
 
 ## Base Resource URI ##
 ### /2010-06-01/Messages/{MessageSid}/Replies ###
@@ -60,8 +60,6 @@ A Reply Instance resource is represented by the following properties:
 
 # Message Replies List Resource #
 
-    /2010-06-01/Messages/{MessageSid}/Replies
-
 ## HTTP Methods ##
 
 ### GET ###
@@ -119,10 +117,6 @@ Not Implemented
 ### DELETE ###
 Not Implemented
 
-## URL Filtering ##
-
-You may limit the list by providing certain query string parameters to the listing resource. Note, parameters are case-sensitive:
-
 # Reply Calls List Resource #
 
     /2010-06-01/Messages/{MessageSid}/Replies/Calls
@@ -130,6 +124,7 @@ You may limit the list by providing certain query string parameters to the listi
 ## HTTP Methods ##
 
 ### GET ###
+Gets a list of Call Replies.
 
 GET /api/2010-06-01/Messages/{MessageSid}/Replies/Calls HTTP/1.1
 
@@ -174,21 +169,75 @@ GET /api/2010-06-01/Messages/{MessageSid}/Replies/Calls.xml HTTP/1.1
     </Response>
     
 ### POST ###
+Use this method for calling back a specific message.  
 
+Post Fields
+<table class="parameters">
+<thead>
+    <tr>
+        <th class="col-1">Property</th>
+        <th class="col-2">Description</th>
+    </tr>
+</thead>
+<tbody>
+	<tr>
+		<td>To</td>
+		<td>Optional, the phone number to call the voicemail or sms message back.  When not supplied, To field will default to the caller who left the voicemail or text message.</td>
+	</tr>
+	<tr>
+		<td>From</td>
+		<td>Optional phone number for the caller's number.  This is the number that will receive the initial calls to connect to the "To" number.</td>
+	</tr>
+    /2010-06-01/Messages/{MessageSid}/Replies
+</tbody>
+</table>
+
+
+    POST https://openvbx.local/api/2010-06-01/Messages/1/Replies/Calls HTTP/1.1
+    To=5558675309
+    
+    {
+    	"Version": "2010-06-01",
+    	"Sid": "CAbfe331c23f1032857db4776098b3b018",
+    	"ReplySid": 89,
+    	"MessageSid": "1",
+    	"From": "+15553112909",
+    	"To": "+15558675309",
+    	"StartTime": "Mon, 19 Jul 2010 12:50:29 -0700",
+    	"EndTime": ""
+    }
+
+    POST https://openvbx.local/api/2010-06-01/Messages/1/Replies/Calls.xml HTTP/1.1
+    To=5558675309
+
+    <?xml version="1.0"?>
+    <Response version="2010-06-01">
+      <Call>
+        <Sid>CA0dcb19f75e72bb39a0c61bf7e9752e50</Sid>
+        <ReplySid>90</ReplySid>
+        <MessageSid>1</MessageSid>
+        <From>+14803342609</From>
+        <To>+14803342609</To>
+        <StartTime>Mon, 19 Jul 2010 19:54:23 +0000</StartTime>
+        <EndTime/>
+      </Call>
+    </Response>
+        
 ### PUT ###
+Not Implemented
 
 ### DELETE ###
+Not Implemented
 
 # Reply SmsMessages List Resource #
 
     /2010-06-01/Messages/{MessageSid}/Replies/SmsMessages
 
-
 ## HTTP Methods ##
 
 ### GET ###
 
-GET /api/2010-06-01/Messages/{MessageSid}/Replies/SmsMessages HTTP/1.1
+    GET /api/2010-06-01/Messages/{MessageSid}/Replies/SmsMessages HTTP/1.1
 
     {
     	"Replies": [
@@ -212,7 +261,7 @@ GET /api/2010-06-01/Messages/{MessageSid}/Replies/SmsMessages HTTP/1.1
     	"Version": "2010-06-01"
     }
     
-GET /api/2010-06-01/Messages/{MessageSid}/Replies/SmsMessages.xml HTTP/1.1
+    GET /api/2010-06-01/Messages/{MessageSid}/Replies/SmsMessages.xml HTTP/1.1
 
     <?xml version="1.0"?>
     <Response version="2010-06-01">
@@ -234,9 +283,63 @@ GET /api/2010-06-01/Messages/{MessageSid}/Replies/SmsMessages.xml HTTP/1.1
     
 
 ### POST ###
+Reply to messages via SMS using this resource method.
 
+POST Fields
+<table class="parameters">
+<thead>
+    <tr>
+        <th class="col-1">Property</th>
+        <th class="col-2">Description</th>
+    </tr>
+</thead>
+<tbody>
+	<tr>
+		<td>To</td>
+		<td>Optional, the phone number to call the voicemail or sms message back.  When not supplied, To field will default to the caller who left the voicemail or text message.</td>
+	</tr>
+	<tr>
+		<td>From</td>
+		<td>Optional phone number for the caller's number.  This is the number that will receive the initial calls to connect to the "To" number.</td>
+	</tr>
+    /2010-06-01/Messages/{MessageSid}/Replies
+</tbody>
+</table>
+
+    POST https://openvbx.local/api/2010-06-01/Messages/1/Replies/SmsMessages HTTP/1.1
+    To=5552123421&Body=A+Text+Message
+
+    {
+    	"Sid": "SM40dab1a88055bb5c188cdb1893eea39c",
+    	"ReplySid": 94,
+    	"MessageSid": "1",
+    	"From": "+15558675309",
+    	"To": "+15552123421",
+    	"Status": false,
+    	"DateSent": false,
+    	"Version": "2010-06-01"
+    }
+    
+    POST https://openvbx.local/api/2010-06-01/Messages/1/Replies/SmsMessages.xml HTTP/1.1
+    To=555212342&Body=A+Text+Message
+
+    <?xml version="1.0"?>
+    <Response version="2010-06-01">
+      <SmsMessage>
+        <Sid>SM68b3405b603954b6a9ebbdb220071105</Sid>
+        <ReplySid>92</ReplySid>
+        <MessageSid>1</MessageSid>
+        <From>+15558675309</From>
+    	<To>+15552123421</To>
+        <Status/>
+        <DateSent/>
+      </SmsMessage>
+    </Response>
+    
 
 
 ### PUT ###
+Not Implemented
 
 ### DELETE ###
+Not Implemented

@@ -43,3 +43,17 @@ OpenVBX returns errors as a main property on the response object for easy to wri
 	    "Version": "2010-06-01"
 	}
 
+## PrettyPrinting ##
+If you want to get a formatted response, you can append the pprint query string parameter to any OpenVBX REST API request.
+
+    GET http://openvbx.local/api?pprint=1 HTTP/1.1
+	{
+		"Versions": [
+			"2010-06-01"
+		],
+
+		"ClientConfiguration": {
+			"RequireTrustedCertificate": false
+		}
+	}
+	

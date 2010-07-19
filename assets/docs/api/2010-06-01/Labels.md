@@ -18,18 +18,10 @@ A Label resource is represented by the following properties:
     </tr>
 </thead>
 <tbody>
-	<tr>
-		<td>Sid</td>
-		<td>A unique identifier for that inbox label</td>
-	</tr>
     <tr>
         <td>Total</td>
         <td>Total number of messages in the label</td>
     </tr>
-	<tr>
-		<td>Read</td>
-		<td>Number of read messages in the label</td>
-	</tr>
 	<tr>
 		<td>New</td>
 		<td>Number of new messages in the label</td>
@@ -37,6 +29,10 @@ A Label resource is represented by the following properties:
 	<tr>
 		<td>Archived</td>
 		<td>Number of archived messages in the label</td>
+	</tr>
+	<tr>
+		<td>Read</td>
+		<td>Number of read messages in the label</td>
 	</tr>
 </tbody>
 </table>
@@ -56,28 +52,22 @@ GET /api/2010-06-01/Labels HTTP/1.1
     {
     	"Labels": [
     		{
-    			"Name": "Label",
-    			"Sid": 0,
+    			"Name": "Inbox",
     			"Archived": 0,
-    			"Type": "inbox",
     			"New": "2",
     			"Read": "1",
     			"Total": "3"
      		},
     		{
     			"Name": "Sales",
-    			"Sid": "1",
     			"Archived": 0,
-    			"Type": "group",
     			"New": 0,
     			"Read": 0,
     			"Total": 0
     		},
     		{
     			"Name": "Support",
-    			"Sid": "2",
     			"Archived": 0,
-    			"Type": "group",
     			"New": 0,
     			"Read": 0,
     			"Total": 0
@@ -96,8 +86,6 @@ GET /api/2010-06-01/Labels.xml HTTP/1.1
     			<Total>3</Total>
     			<Read>1</Read>
     			<New>2</New>
-    			<Sid>0</Sid>
-				<Type>inbox</Type>
     		</Label>
     		<Label>
     			<Name>Sales</Name>
@@ -105,8 +93,6 @@ GET /api/2010-06-01/Labels.xml HTTP/1.1
     			<Total>0</Total>
     			<Read>0</Read>
     			<New>0</New>
-    			<Sid>1</Sid>
-				<Type>group</Type>
     		</Label>
     		<Label>
     			<Name>Support</Name>
@@ -114,8 +100,6 @@ GET /api/2010-06-01/Labels.xml HTTP/1.1
     			<Total>0</Total>
     			<Read>0</Read>
     			<New>0</New>
-    			<Sid>2</Sid>
-				<Type>group</Type>
     		</Label>
     	</Labels>
     </Response> 
@@ -143,9 +127,7 @@ GET /api/2010-06-01/Labels/{LabelName} HTTP/1.1
 
     {
     	"Name": "Sales",
-    	"Sid": "1",
     	"Archived": 0,
-    	"Type": "group",
     	"New": "1",
     	"Read": 0,
     	"Total": "1",
@@ -162,8 +144,6 @@ GET http://apps.localhost.twilio.com/api/2010-06-01/Labels/Sales.xml
     		<Total>1</Total>
     		<Read>0</Read>
     		<New>1</New>
-    		<Sid>1</Sid>
-    		<Type>group</Type>
     	</Label>
     </Response>
     
@@ -176,11 +156,3 @@ Not Implemented
 
 ### DELETE ###
 Not Implemented
-
-# Label Instance Sub Resources #
-
-# Messages #
-
-http://apps.localhost.twilio.com/api/2010-06-01/Labels/Sales/Messages
-
-Returns a list of messages that are under that label name. See the [Messages](Messages) section for the response format.
