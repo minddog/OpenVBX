@@ -51,9 +51,9 @@ class CallsFactoryResource extends RestResource
 
 		$user = OpenVBX::getCurrentUser();
 		
-		$to = preg_replace('/[^0-9]*/','', $ci->input->post('to'));
-		$callerid = preg_replace('/[^0-9]*/','', $ci->input->post('callerid'));
-		$from = $ci->input->post('from');
+		$to = normalize_phone_to_E164($ci->input->post('To'));
+		$callerid = normalize_phone_to_E164($ci->input->post('Callerid'));
+		$from = normalize_phone_to_E164($ci->input->post('From'));
 		
 		if(empty($from))
 		{

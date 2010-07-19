@@ -37,9 +37,9 @@ class SmsMessagesFactoryResource extends RestResource
 
 		$user = OpenVBX::getCurrentUser();
 		
-		$to = preg_replace('/[^0-9]*/','', $ci->input->post('to'));
-		$from = preg_replace('/[^0-9]*/','', $ci->input->post('from'));
-		$body = $ci->input->post('body');
+		$body = $ci->input->post('Body');
+		$to = normalize_phone_to_E164($ci->input->post('To'));
+		$from = normalize_phone_to_E164($ci->input->post('From'));
 
 		if(empty($body))
 		{

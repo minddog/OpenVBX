@@ -51,8 +51,8 @@ class CallInstanceResponse extends RestResponse
 						   'MessageSid' => $this->MessageSid,
 						   'From' => normalize_phone_to_E164($this->To),
 						   'To' => normalize_phone_to_E164($this->From),
-						   'StartTime' => $this->StartTime,
-						   'EndTime' => $this->EndTime,
+						   'StartTime' => utc_time_rfc2822($this->StartTime),
+						   'EndTime' => utc_time_rfc2822($this->EndTime),
 						   );
 
 				return json_encode($callJSON);
