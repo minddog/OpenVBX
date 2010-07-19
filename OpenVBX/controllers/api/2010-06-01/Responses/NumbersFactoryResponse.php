@@ -51,7 +51,7 @@ class NumbersFactoryResponse extends RestResponse
 						array(
 							  'Sid' => $number->id,
 							  'Name' => $number->name,
-							  'Phone' => $number->phone,
+							  'Phone' => normalize_phone_to_E164($number->phone),
 							  'Pin' => $number->pin,
 							  'Sandbox' => $number->sandbox,
 							  'Installed' => $number->installed,
@@ -72,7 +72,7 @@ class NumbersFactoryResponse extends RestResponse
 					$numberXml = $numbersXml->addChild('Number');
 					$numberXml->addChild('Sid', $number->id);
 					$numberXml->addChild('Name', $number->name);
-					$numberXml->addChild('Phone', $number->phone);
+					$numberXml->addChild('Phone', normalize_phone_to_E164($number->phone));
 					$numberXml->addChild('Pin', $number->pin);
 					$numberXml->addChild('Sandbox', ($number->sandbox)? 'true': 'false');
 					$numberXml->addChild('Installed', ($number->installed)? 'true' : 'false');
