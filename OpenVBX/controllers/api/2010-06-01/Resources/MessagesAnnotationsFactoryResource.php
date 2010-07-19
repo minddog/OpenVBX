@@ -26,6 +26,9 @@ class MessagesAnnotationsFactoryResource extends RestResource
 	public function __construct($params)
 	{
 		parent::__construct();
+		$ci = &get_instance();
+		$ci->load->model('vbx_message');
+
 		$this->MessageSid = !empty($params['MessageSid'])? $params['MessageSid'] : null;
 		if(!$this->MessageSid)
 			throw new RestException('Missing Message Sid');
@@ -37,7 +40,6 @@ class MessagesAnnotationsFactoryResource extends RestResource
 		$ci = &get_instance();
 		$max = input_int($ci->input->get('max'), 10);
 		$offset = intval($ci->input->get('offset', 0));
-		$ci->load->model('vbx_message');
 		$message = $ci->vbx_message->get_message($this->MessageSid);
 
 		if($message)
@@ -75,10 +77,11 @@ class MessagesAnnotationsFactoryResource extends RestResource
 		if(!$sid)
 			throw new RestException('Unable to create annotation');
 		
-		$response = new RestResponse();
+		$response = new MessageAnnotationInstanceResponse();
 		
 		$response->MessageSid = $this->MessageSid;
 		$response->Sid = (string)$sid;
+		$response->Annotation = $ci->vbx_message->get_annotation($sid);
 		
 		return $response;
 	}

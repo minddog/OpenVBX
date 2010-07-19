@@ -21,9 +21,33 @@
 
 class MessagesAnnotationsInstanceResource extends RestResource
 {
+	public function __construct($params = array())
+	{
+		$this->MessageSid = isset($params['MessageSid'])? $params['MessageSid'] : null;
+		$this->Sid = isset($params['AnnotationSid'])? $params['AnnotationSid'] : null;
+		
+		if(!$this->MessageSid)
+		{
+			throw new Exception('MessageSid required to complete this request.', 500);
+		}
+		
+		if(!$this->Sid)
+		{
+			throw new Exception('Sid for annotation required to complete this request.', 500);
+		}
+
+	}
+	
 	public function get()
 	{
-		return new NotImplementedRestResponse();
+		$response = new MessageAnnotationInstanceResponse();
+		$response->Sid = $this->Sid;
+		$response->MessageSid = $this->MessageSid;
+		$ci = &get_instance();
+		$ci->load->model('vbx_message');
+		$response->Annotation = $ci->vbx_message->get_annotation($this->Sid);
+		
+		return $response;
 	}
 
 	public function post()

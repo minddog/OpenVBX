@@ -33,13 +33,13 @@ class Api_2010_06_01 extends Rest_Controller
 	{
 		parent::__construct();
 		RestResourceFactory::$resources = array(
-												'Messages/{MessageSid}/Annotations/{Sid}' => 'MessagesAnnotationsInstanceResource',
 												'Messages/{MessageSid}/Replies' =>  'MessagesRepliesFactoryResource', /* list of calls or smses <Calls>,<SmsMessages>, etc. */
 												/* list of calls, POST to call back, optional callback # (call all my phones if not supplied in v2) */
 												/* list of smses, POST to send an SMS reply, only <Body> is required */
 												'Messages/{MessageSid}/Replies/{AnnotationType}' => 'MessagesRepliesFactoryResource',
 												
 												'Messages/{MessageSid}/Annotations' => 'MessagesAnnotationsFactoryResource',
+												'Messages/{MessageSid}/Annotations/{AnnotationSid}' => 'MessagesAnnotationsInstanceResource',
 												'Messages/{Sid}' => 'MessagesInstanceResource', /* message Detail */
 												'Messages' => 'MessagesFactoryResource', /* list of all messages */
 
