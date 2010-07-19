@@ -1,4 +1,5 @@
 # SmsMessages #
+Use SmsMessage resource to make outbound text messages with OpenVBX.
 
 ## Base Resource URI ##
 ### /2010-06-01/SmsMessages ###
@@ -28,15 +29,15 @@ A SmsMessage resource is represented by the following properties:
 	</tr>
 	<tr>
 		<td>From</td>
-		<td></td>
+		<td>An E164 number representing the Sender.</td>
 	</tr>
 	<tr>
 		<td>To</td>
-		<td></td>
+		<td>An E164 number representing the Receiving party.</td>
 	</tr>
 	<tr>
 		<td>DateSent</td>
-		<td></td>
+		<td>The time the message was updated in RFC2822 UTC Format</td>
 	</tr>
 </tbody>
 </table>
@@ -59,16 +60,16 @@ _Post Parameters_
 </thead>
 <tbody>
 	<tr>
-		<td>to</td>
-		<td>Phone number to call.</td>
+		<td>To</td>
+		<td>A valid phone number in any format.</td>
 	</tr>
 	<tr>
-		<td>from</td>
-		<td>Optional - A valid ten digit or international phone number.  If not provided, will dial first active number in user's device list.</td>
+		<td>From</td>
+		<td>Optional - A Twilio number to use as callerid.  If not provided, will automatically select a twilio number.</td>
 	</tr>
 	<tr>
-		<td>body</td>
-		<td>SMS Message to be received.</td>
+		<td>Body</td>
+		<td>Message to be sent to recipient.  Message is limited to 160 characters.</td>
 	</tr>
 </tbody>
 </table>

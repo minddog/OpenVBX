@@ -1,4 +1,5 @@
 # Calls #
+Use the Calls resource to make outbound calls.
 
 ## Base Resource URI ##
 ### /2010-06-01/Calls ###
@@ -28,19 +29,19 @@ A Call resource is represented by the following properties:
 	</tr>
 	<tr>
 		<td>From</td>
-		<td></td>
+		<td>An E164 number representing the Caller.</td>
 	</tr>
 	<tr>
 		<td>To</td>
-		<td></td>
+		<td>An E164 number representing the Called party.</td>
 	</tr>
 	<tr>
 		<td>StartTime</td>
-		<td></td>
+		<td>The time the call was received in RFC2822 UTC Format</td>
 	</tr>
 	<tr>
 		<td>EndTime</td>
-		<td></td>
+		<td>The time the call ended in RFC2822 UTC Format</td>
 	</tr>
 </tbody>
 </table>
@@ -63,63 +64,53 @@ _Post Parameters_
 </thead>
 <tbody>
 	<tr>
-		<td>to</td>
-		<td>Phone number to call.</td>
+		<td>To</td>
+		<td>A valid phone number in any format.</td>
 	</tr>
 	<tr>
-		<td>from</td>
-		<td>Optional - A valid ten digit or international phone number.  If not provided, will dial first active number in user's device list.</td>
+		<td>From</td>
+		<td>Optional - A valid phone number in any format.  If not provided, will dial first active number in user's device list.</td>
 	</tr>
 	<tr>
-		<td>callerid</td>
-		<td>Optional - A Twilio number to call with</td>
+		<td>Callerid</td>
+		<td>Optional - A Twilio number to use as callerid.  If not provided, will automatically select a twilio number.</td>
 	</tr>
 </tbody>
 </table>
 
 
-POST /api/2010-06-01/Calls HTTP/1.1
+    POST /api/2010-06-01/Calls HTTP/1.1
+    To=5551212982
 
-HTTP Body:
-     to=5551212982
-
-    {
-    	"Version": "2010-06-01",
-    	"Sid": "CA85ab5377b5ae84d4ce2d74a3a972b8bb",
-    	"AnnotationSid": false,
-    	"MessageSid": false,
-    	"From": "(555) 867-5309",
-    	"To": "(555) 121-2982",
-    	"StartTime": "Thu, 15 Jul 2010 19:23:56 -0700",
-    	"EndTime": ""
-    }
+	{
+		"Version": "2010-06-01",
+		"Sid": "CA46c7a71c81fd556bd20bab9a80f91c2c",
+		"ReplySid": false,
+		"MessageSid": false,
+		"From": "+15551142309",
+		"To": "+15551212982",
+		"StartTime": "Mon, 19 Jul 2010 22:18:12 +0000",
+		"EndTime": false
+	}
     
-POST /api/2010-06-01/Calls.xml HTTP/1.1
-
-HTTP Body:
-     to=5551212982
+    POST /api/2010-06-01/Calls.xml HTTP/1.1
+    To=5551212982
 
     <?xml version="1.0"?>
     <Response version="2010-06-01">
       <Call>
-        <Sid>CA1a986efd24caa03cb20bec0677aeb865</Sid>
+        <Sid>CA48f91902f8b359067884b53000b73cc5</Sid>
         <ReplySid/>
         <MessageSid/>
-        <From>(555) 867-5309</From>
-        <To>(555) 121-2982</To>
-        <StartTime>Fri, 16 Jul 2010 02:23:37 +0000</StartTime>
+        <From>+15551142309</From>
+        <To>+15551212982</To>
+        <StartTime>Mon, 19 Jul 2010 22:19:01 +0000</StartTime>
         <EndTime/>
       </Call>
     </Response>
-    
+        
 ### PUT ###
 Not Implemented
 
 ### DELETE ###
 Not Implemented
-
-
-## URL Filtering ##
-
-You may limit the list by providing certain query string parameters to the listing resource. Note, parameters are case-sensitive:
-

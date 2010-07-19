@@ -188,7 +188,6 @@ Post Fields
 		<td>From</td>
 		<td>Optional phone number for the caller's number.  This is the number that will receive the initial calls to connect to the "To" number.</td>
 	</tr>
-    /2010-06-01/Messages/{MessageSid}/Replies
 </tbody>
 </table>
 
