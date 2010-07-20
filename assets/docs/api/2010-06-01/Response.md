@@ -57,3 +57,10 @@ If you want to get a formatted response, you can append the pprint query string 
 		}
 	}
 	
+## Combining Resources ##
+When you want to combine a resource, with its child resources, there is an query string parameter available to do this.  This is great for mobile clients and other bandwidth restricited environments, where you only have enough time for a single http request.  Its like XMLRPC multicall in a RESTy manner.
+
+* withResources - To include sub resources of a message, append a comma seperated list of sub resources to the URL.  
+     
+     http://openvbx.local/api/2010-06-01/Messages?withResources=Annotations
+
