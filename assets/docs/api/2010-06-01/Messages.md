@@ -25,11 +25,11 @@ A Message Instance resource is represented by the following properties:
 	</tr>
 	<tr>
 		<td>From</td>
-        <td>The phone number of the telephone that made this Call. For incoming calls, it's the person that called you. Always presented as an E164 formatted number. For outgoing calls, it's one of your Twilio phone numbers.</td>
+        <td>The phone number of the telephone that made this Call. For incoming calls, it's the person that called you. Always presented as an E164 formatted number. For outgoing calls, it's one of your Twilio phone numbers.  For example, +15558675309.</td>
 	</tr>
     <tr>
         <td>To</td>
-        <td>The phone number of the telephone that received this Call. For incoming calls, it's one of your Twilio phone numbers. For outgoing calls, it's the person that you called. Always presented as an E164 formatted number.</td>
+        <td>The phone number of the telephone that received this Call. For incoming calls, it's one of your Twilio phone numbers. For outgoing calls, it's the person that you called. Always presented as an E164 formatted number.  For example, +15558675309.</td>
     </tr>
 	<tr>
 		<td>Body</td>
@@ -56,11 +56,11 @@ A Message Instance resource is represented by the following properties:
 		<td>Represents User's FriendlyName of whom the message is Assigned to.</td>
 	</tr>
 	<tr>
-		<td>Unread</td>
+		<td>IsUnread</td>
 		<td>Represents if the message is unread or not by a boolean string of 'true' or 'false'</td>
 	</tr>
 	<tr>
-		<td>Archived</td>
+		<td>IsArchived</td>
 		<td>Represents if the message has been archived by a boolean string of 'true' or 'false'</td>
 	</tr>
 	<tr>
@@ -68,20 +68,24 @@ A Message Instance resource is represented by the following properties:
 		<td>Represents a list of Labels the message is mapped to, ie: "Labels" : ["Inbox", "Sales"]</td>
 	</tr>
 	<tr>
+		<td>GroupSid</td>
+		<td>Id of the group this message belongs to.</td>
+	</tr>
+	<tr>
 		<td>Assignees</td>
 		<td>Respresents a list of Users that can be assigned to this message</td>
 	</tr>
 	<tr>
 		<td>NumAnnotations</td>
-		<td>Total number of annotations on the message</td>
+		<td>Total number of annotations to the message</td>
 	</tr>
 	<tr>
 		<td>DateCreated</td>
-		<td>The time the message was received in RFC2822 UTC Format</td>
+		<td>The time the message was received in RFC2822 UTC Format. Ex: Mon, 19 Jul 2010 22:19:01 +0000</td>
 	</tr>
 	<tr>
-		<td>LastUpdated</td>
-		<td>The time the message was last updated in RFC2822 UTC Format</td>
+		<td>DateUpdated</td>
+		<td>The time the message was last updated in RFC2822 UTC Format. Ex: Mon, 19 Jul 2010 22:19:01 +0000</td>
 	</tr>
 </tbody>
 </table>
@@ -190,9 +194,7 @@ Not Implemented
 
 You may limit the list by providing certain query string parameters to the listing resource. Note, parameters are case-sensitive:
 
-* withResources - To include sub resources of a message, append a comma seperated list of sub resources to the URL.  
-     
-     http://openvbx.local/api/2010-06-01/Messages?withResources=Annotations
+* GroupSid - filter messages that match a specific group
 
 * Labels - filters messages that match the comma seperated list of Labels
 

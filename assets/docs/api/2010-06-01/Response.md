@@ -64,3 +64,6 @@ When you want to combine a resource, with its child resources, there is an query
      
      http://openvbx.local/api/2010-06-01/Messages?withResources=Annotations
 
+## E164 Number Formatting ##
+- Link to wikipedia
+- +15558675309 example ....
